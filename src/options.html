@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarLists++ 设置</title>
+    <link rel="stylesheet" href="./options.css">
+  </head>
+  <body>
+    <main class="options-shell">
+      <section class="options-card">
+        <div class="options-head">
+          <p class="options-kicker">StarLists++</p>
+          <h1>GitHub starred lists 工作台</h1>
+          <p>优先把“未分组”变成你的整理入口；需要更多 API 配额时可以填 PAT。</p>
+        </div>
+
+        <label class="options-row">
+          <span>
+            <strong>显示 Star 日期</strong>
+            <small>在 `https://github.com/stars` 卡片上显示 `Starred on ...`</small>
+          </span>
+          <input id="showStarDate" type="checkbox">
+        </label>
+
+        <label class="options-row">
+          <span>
+            <strong>全部视图隐藏已分组仓库</strong>
+            <small>默认开启后，“全部”会只留下尚未归档到任何 list 的仓库</small>
+          </span>
+          <input id="hideGroupedInAll" type="checkbox">
+        </label>
+
+        <label class="options-row">
+          <span>
+            <strong>显示 list 标签</strong>
+            <small>在 stars 卡片上补充所属 list 徽标</small>
+          </span>
+          <input id="showListBadges" type="checkbox">
+        </label>
+
+        <label class="options-row">
+          <span>
+            <strong>Star 后自动打开 lists 面板</strong>
+            <small>Star 新仓库后直接进入分组操作</small>
+          </span>
+          <input id="autoOpenAfterStar" type="checkbox">
+        </label>
+
+        <label class="options-row options-row-stack">
+          <span>
+            <strong>PAT Token</strong>
+            <small>可选。用于提升 `starred_at` 读取成功率和 API 配额。</small>
+          </span>
+          <input id="token" type="password" placeholder="ghp_xxx 或 fine-grained token">
+        </label>
+
+        <div class="options-actions">
+          <button id="saveButton" type="button">保存设置</button>
+          <span id="statusText" aria-live="polite"></span>
+        </div>
+      </section>
+    </main>
+
+    <script src="./shared/base.js"></script>
+    <script src="./shared/storage.js"></script>
+    <script src="./options.js"></script>
+  </body>
+</html>

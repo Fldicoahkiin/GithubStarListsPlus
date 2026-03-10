@@ -1,0 +1,186 @@
+(() => {
+  const runtimeApi = globalThis.browser || globalThis.chrome;
+
+  const DEFAULT_SETTINGS = Object.freeze({
+    showStarDate: true,
+    hideGroupedInAll: true,
+    showListBadges: true,
+    adaptToTheme: true,
+    autoOpenAfterStar: true,
+    enableBatchSelection: true,
+    token: ""
+  });
+
+  const STORAGE_KEYS = Object.freeze({
+    settings: "starListsSettings",
+    repoCache: "starListsRepoCache",
+    listCatalog: "starListsListCatalog"
+  });
+
+  const MESSAGE_TYPES = Object.freeze({
+    getStarMetadata: "star-lists:get-star-metadata",
+    bulkUnstar: "star-lists:bulk-unstar"
+  });
+
+  function callChrome(target, method, args = []) {
+    const fn = target?.[method];
+    if (typeof fn !== "function") {
+      return Promise.reject(new Error(`扩展 API 不存在: ${method}`));
+    }
+
+    if (globalThis.browser) {
+      try {
+        const result = fn.apply(target, args);
+        if (result && typeof result.then === "function") {
+          return result;
+        }
+
+        return Promise.resolve(result);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }
+
+    return new Promise((resolve, reject) => {
+      try {
+        fn.call(target, ...args, (value) => {
+          const error = globalThis.chrome?.runtime?.lastError || runtimeApi.runtime?.lastError || runtimeApi.lastError;
+          if (error) {
+            reject(new Error(error.message));
+            return;
+          }
+          resolve(value);
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
+  function normalizeRepoKey(owner, repo) {
+    if (!owner || !repo) {
+      return "";
+    }
+
+    return `${owner}/${repo}`.toLowerCase();
+  }
+
+  function splitRepoKey(repoKey) {
+    const [owner = "", repo = ""] = String(repoKey || "").split("/");
+    return { owner, repo };
+  }
+
+  function parseRepositoryPath(pathname) {
+    const parts = String(pathname || "")
+      .split("/")
+      .filter(Boolean);
+
+    if (parts.length !== 2) {
+      return null;
+    }
+
+    const [owner, repo] = parts;
+
+    if (!owner || !repo || repo.endsWith(".atom")) {
+      return null;
+    }
+
+    return {
+      owner,
+      repo,
+      key: normalizeRepoKey(owner, repo)
+    };
+  }
+
+  function parseRepositoryUrl(urlValue) {
+    try {
+      const url = new URL(urlValue, location.origin);
+      return parseRepositoryPath(url.pathname);
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function parseListIdentity(urlValue) {
+    try {
+      const url = new URL(urlValue, location.origin);
+      const listParam = url.searchParams.get("list");
+
+      if (url.pathname === "/stars" && listParam) {
+        return {
+          id: listParam,
+          url: url.toString()
+        };
+      }
+
+      const parts = url.pathname.split("/").filter(Boolean);
+      if (parts.length >= 3 && parts[0] === "stars" && parts[1] === "lists") {
+        return {
+          id: parts.slice(2).join("/"),
+          url: url.toString()
+        };
+      }
+
+      return null;
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function formatStarDate(value) {
+    if (!value) {
+      return "";
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return "";
+    }
+
+    return new Intl.DateTimeFormat(undefined, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(date);
+  }
+
+  function debounce(fn, wait = 180) {
+    let timer = 0;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = globalThis.setTimeout(() => fn(...args), wait);
+    };
+  }
+
+  function wait(ms) {
+    return new Promise((resolve) => globalThis.setTimeout(resolve, ms));
+  }
+
+  function readUserLogin() {
+    const meta = document.querySelector('meta[name="user-login"], meta[name="octolytics-actor-login"]');
+    return meta?.content?.trim() || "";
+  }
+
+  function readRepositoryNwo() {
+    const meta = document.querySelector('meta[name="octolytics-dimension-repository_nwo"]');
+    return meta?.content?.trim() || "";
+  }
+
+  globalThis.StarListsCore = {
+    runtimeApi,
+    DEFAULT_SETTINGS,
+    STORAGE_KEYS,
+    MESSAGE_TYPES,
+    callChrome,
+    normalizeRepoKey,
+    splitRepoKey,
+    parseRepositoryPath,
+    parseRepositoryUrl,
+    parseListIdentity,
+    formatStarDate,
+    debounce,
+    wait,
+    readUserLogin,
+    readRepositoryNwo
+  };
+})();

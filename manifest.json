@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "StarLists++",
+  "description": "GitHub starred lists 增强：未分组视图、Star 日期、仓库页快速分组。",
+  "version": "0.1.0",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://api.github.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "scripts": [
+      "src/background.js"
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "src/shared/base.js",
+        "src/shared/storage.js",
+        "src/content.js"
+      ],
+      "css": [
+        "src/content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "src/options.html",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "starlistspp@fldicoahkiin.local",
+      "strict_min_version": "121.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  }
+}
