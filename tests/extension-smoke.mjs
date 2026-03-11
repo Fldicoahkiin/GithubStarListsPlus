@@ -44,7 +44,7 @@ function loadCore(overrides) {
   sandbox.globalThis = sandbox;
   vm.createContext(sandbox);
   vm.runInContext(fs.readFileSync(baseScriptPath, "utf8"), sandbox, { filename: "base.js" });
-  return sandbox.StarListsCore;
+  return sandbox.GithubStarListsPlusCore;
 }
 
 async function testChromeCallbackApi() {
@@ -109,7 +109,7 @@ function testManifest() {
   assert.equal(manifest.manifest_version, 3);
   assert.equal(manifest.background.service_worker, "src/background.js");
   assert.deepEqual(manifest.background.scripts, ["src/background.js"]);
-  assert.equal(manifest.browser_specific_settings.gecko.id, "starlistspp@fldicoahkiin.local");
+  assert.equal(manifest.browser_specific_settings.gecko.id, "githubstarlistsplus@fldicoahkiin.local");
   assert.deepEqual(
     manifest.browser_specific_settings.gecko.data_collection_permissions.required,
     ["none"]

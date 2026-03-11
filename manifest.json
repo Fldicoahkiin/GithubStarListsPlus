@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "StarLists++",
+  "name": "GithubStarListsPlus",
   "description": "GitHub starred lists 增强：未分组视图、Star 日期、仓库页快速分组。",
   "version": "0.1.0",
   "permissions": [
@@ -35,7 +35,7 @@
   "options_page": "src/options.html",
   "browser_specific_settings": {
     "gecko": {
-      "id": "starlistspp@fldicoahkiin.local",
+      "id": "githubstarlistsplus@fldicoahkiin.local",
       "strict_min_version": "121.0",
       "data_collection_permissions": {
         "required": [

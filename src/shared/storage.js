@@ -1,5 +1,5 @@
 (() => {
-  const core = globalThis.StarListsCore;
+  const core = globalThis.GithubStarListsPlusCore;
   const storageApi = core.runtimeApi.storage;
 
   async function getSyncObject(defaults) {
@@ -102,7 +102,7 @@
     return nextCatalog;
   }
 
-  globalThis.StarListsStorage = {
+  globalThis.GithubStarListsPlusStorage = {
     getSettings,
     saveSettings,
     getRepoCache,

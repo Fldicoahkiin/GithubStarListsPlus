@@ -1,6 +1,6 @@
 (() => {
-  const core = globalThis.StarListsCore;
-  const storage = globalThis.StarListsStorage;
+  const core = globalThis.GithubStarListsPlusCore;
+  const storage = globalThis.GithubStarListsPlusStorage;
 
   const state = {
     lastUrl: "",
@@ -89,7 +89,7 @@
     clearTimeout(state.routeTimer);
     state.routeTimer = globalThis.setTimeout(() => {
       refreshRoute().catch((error) => {
-        console.error("StarLists++ route refresh failed", error);
+        console.error("GithubStarListsPlus route refresh failed", error);
       });
     }, 120);
   }
@@ -186,10 +186,10 @@
   }
 
   function ensureCardMeta(card) {
-    let meta = card.root.querySelector(".starlists-card-meta");
+    let meta = card.root.querySelector(".github-star-lists-plus-card-meta");
     if (!meta) {
       meta = document.createElement("div");
-      meta.className = "starlists-card-meta";
+      meta.className = "github-star-lists-plus-card-meta";
       card.root.appendChild(meta);
     }
 
@@ -202,14 +202,14 @@
     }
 
     const heading = card.repoLink.closest("h1, h2, h3") || card.repoLink.parentElement;
-    let checkbox = heading.querySelector(".starlists-card-select input");
+    let checkbox = heading.querySelector(".github-star-lists-plus-card-select input");
     if (checkbox) {
       checkbox.checked = state.selectedKeys.has(card.key);
       return;
     }
 
     const wrapper = document.createElement("label");
-    wrapper.className = "starlists-card-select";
+    wrapper.className = "github-star-lists-plus-card-select";
     wrapper.title = "选择仓库进行批量操作";
 
     checkbox = document.createElement("input");
@@ -255,15 +255,15 @@
 
   function updateCardSelection(card) {
     const checked = state.selectedKeys.has(card.key);
-    card.root.classList.toggle("starlists-card-selected", checked);
-    const input = card.root.querySelector(".starlists-card-select input");
+    card.root.classList.toggle("github-star-lists-plus-card-selected", checked);
+    const input = card.root.querySelector(".github-star-lists-plus-card-select input");
     if (input) {
       input.checked = checked;
     }
   }
 
   function syncBatchToolbar() {
-    const toolbar = document.querySelector(".starlists-batch-toolbar");
+    const toolbar = document.querySelector(".github-star-lists-plus-batch-toolbar");
     if (!toolbar) {
       return;
     }
@@ -280,22 +280,22 @@
     const badges = Array.isArray(cacheEntry?.lists) ? cacheEntry.lists : [];
     const starDateText = core.formatStarDate(cacheEntry?.starredAt);
     const dateMarkup = cacheEntry?.starredAt
-      ? `<span class="starlists-date">Starred on ${escapeHtml(starDateText)}</span>`
-      : `<span class="starlists-date is-loading">正在读取 Star 日期...</span>`;
+      ? `<span class="github-star-lists-plus-date">Starred on ${escapeHtml(starDateText)}</span>`
+      : `<span class="github-star-lists-plus-date is-loading">正在读取 Star 日期...</span>`;
 
     const badgeMarkup = badges.length > 0
       ? badges
           .slice(0, 3)
-          .map((item) => `<a class="starlists-badge" href="${escapeHtml(item.url)}">${escapeHtml(item.name)}</a>`)
+          .map((item) => `<a class="github-star-lists-plus-badge" href="${escapeHtml(item.url)}">${escapeHtml(item.name)}</a>`)
           .join("")
-      : `<span class="starlists-badge is-empty">未分组</span>`;
+      : `<span class="github-star-lists-plus-badge is-empty">未分组</span>`;
 
     const showDate = Boolean(state.settings?.showStarDate);
     const showBadges = Boolean(state.settings?.showListBadges);
 
     meta.innerHTML = [
       showDate ? dateMarkup : "",
-      showBadges ? `<div class="starlists-badges">${badgeMarkup}</div>` : ""
+      showBadges ? `<div class="github-star-lists-plus-badges">${badgeMarkup}</div>` : ""
     ].join("");
   }
 
@@ -521,11 +521,11 @@
         visible = visible && listCount === 0;
       }
 
-      card.root.classList.toggle("starlists-hidden", !visible);
+      card.root.classList.toggle("github-star-lists-plus-hidden", !visible);
     }
 
     if (sortMode !== "default") {
-      const sortable = cards.filter((card) => !card.root.classList.contains("starlists-hidden"));
+      const sortable = cards.filter((card) => !card.root.classList.contains("github-star-lists-plus-hidden"));
       sortable.sort((left, right) => {
         const leftValue = new Date(state.repoCache?.[left.key]?.starredAt || 0).getTime();
         const rightValue = new Date(state.repoCache?.[right.key]?.starredAt || 0).getTime();
@@ -540,7 +540,7 @@
       }
     }
 
-    const note = document.querySelector(".starlists-toolbar-note");
+    const note = document.querySelector(".github-star-lists-plus-toolbar-note");
     if (note) {
       note.textContent = currentList
         ? `当前是 list：${currentList.id}`
@@ -551,7 +551,7 @@
   }
 
   function syncToolbarSelection(listCatalog) {
-    const filter = document.querySelector(".starlists-filter-select");
+    const filter = document.querySelector(".github-star-lists-plus-filter-select");
     if (!filter) {
       return;
     }
@@ -581,36 +581,36 @@
   }
 
   function ensureStarsToolbar(listCatalog) {
-    let toolbar = document.querySelector(".starlists-toolbar");
+    let toolbar = document.querySelector(".github-star-lists-plus-toolbar");
     if (!toolbar) {
       toolbar = document.createElement("section");
-      toolbar.className = "starlists-toolbar";
+      toolbar.className = "github-star-lists-plus-toolbar";
       toolbar.innerHTML = `
-        <div class="starlists-toolbar-main">
+        <div class="github-star-lists-plus-toolbar-main">
           <label>
             <span>视图</span>
-            <select class="starlists-filter-select"></select>
+            <select class="github-star-lists-plus-filter-select"></select>
           </label>
           <label>
             <span>筛选</span>
-            <input class="starlists-search-input" type="search" placeholder="搜索仓库、描述、list 名">
+            <input class="github-star-lists-plus-search-input" type="search" placeholder="搜索仓库、描述、list 名">
           </label>
           <label>
             <span>排序</span>
-            <select class="starlists-sort-select">
+            <select class="github-star-lists-plus-sort-select">
               <option value="default">GitHub 默认</option>
               <option value="star-desc">按 Star 时间（新→旧）</option>
               <option value="star-asc">按 Star 时间（旧→新）</option>
             </select>
           </label>
         </div>
-        <div class="starlists-toolbar-note"></div>
+        <div class="github-star-lists-plus-toolbar-note"></div>
       `;
 
       const reference = state.cards[0]?.root?.parentElement || document.querySelector("main");
       reference?.parentElement?.insertBefore(toolbar, reference);
 
-      toolbar.querySelector(".starlists-filter-select").addEventListener("change", (event) => {
+      toolbar.querySelector(".github-star-lists-plus-filter-select").addEventListener("change", (event) => {
         const value = event.target.value;
         if (value.startsWith("list:")) {
           const list = listCatalog.find((item) => `list:${item.id}` === value);
@@ -640,12 +640,12 @@
         }
       });
 
-      toolbar.querySelector(".starlists-search-input").addEventListener("input", core.debounce((event) => {
+      toolbar.querySelector(".github-star-lists-plus-search-input").addEventListener("input", core.debounce((event) => {
         state.view.search = event.target.value;
         applyCardFilters();
       }, 100));
 
-      toolbar.querySelector(".starlists-sort-select").addEventListener("change", (event) => {
+      toolbar.querySelector(".github-star-lists-plus-sort-select").addEventListener("change", (event) => {
         state.view.sort = event.target.value;
         applyCardFilters();
       });
@@ -656,13 +656,13 @@
   }
 
   function ensureBatchToolbar() {
-    let toolbar = document.querySelector(".starlists-batch-toolbar");
+    let toolbar = document.querySelector(".github-star-lists-plus-batch-toolbar");
     if (toolbar) {
       return toolbar;
     }
 
     toolbar = document.createElement("div");
-    toolbar.className = "starlists-batch-toolbar";
+    toolbar.className = "github-star-lists-plus-batch-toolbar";
     toolbar.innerHTML = `
       <span data-role="count">0 个已选</span>
       <button data-action="unstar" type="button">批量取消 Star</button>
@@ -706,7 +706,7 @@
         state.selectedKeys.clear();
         syncBatchToolbar();
       } catch (error) {
-        console.error("StarLists++ bulk unstar failed", error);
+        console.error("GithubStarListsPlus bulk unstar failed", error);
       } finally {
         actionButton.disabled = false;
         actionButton.textContent = "批量取消 Star";
@@ -733,7 +733,7 @@
       }
 
       setupStarsPage().catch((error) => {
-        console.error("StarLists++ stars rerender failed", error);
+        console.error("GithubStarListsPlus stars rerender failed", error);
       });
     }, 160));
 
@@ -786,8 +786,8 @@
     watchStarsMutations();
     syncBatchToolbar();
     state.pageCleanup = () => {
-      document.querySelector(".starlists-toolbar")?.remove();
-      document.querySelector(".starlists-batch-toolbar")?.remove();
+      document.querySelector(".github-star-lists-plus-toolbar")?.remove();
+      document.querySelector(".github-star-lists-plus-batch-toolbar")?.remove();
     };
   }
 
@@ -813,19 +813,19 @@
   }
 
   function renderRepositoryChips(wrapper, repoCacheEntry) {
-    let chips = wrapper.querySelector(".starlists-repo-chips");
+    let chips = wrapper.querySelector(".github-star-lists-plus-repo-chips");
     if (!chips) {
       chips = document.createElement("div");
-      chips.className = "starlists-repo-chips";
+      chips.className = "github-star-lists-plus-repo-chips";
       wrapper.appendChild(chips);
     }
 
     const items = repoCacheEntry?.lists || [];
     chips.innerHTML = items.length > 0
       ? items
-          .map((item) => `<a class="starlists-badge" href="${escapeHtml(item.url)}">${escapeHtml(item.name)}</a>`)
+          .map((item) => `<a class="github-star-lists-plus-badge" href="${escapeHtml(item.url)}">${escapeHtml(item.name)}</a>`)
           .join("")
-      : `<span class="starlists-badge is-empty">未分组</span>`;
+      : `<span class="github-star-lists-plus-badge is-empty">未分组</span>`;
   }
 
   async function saveRepositoryLists(repoKey, actions) {
@@ -922,7 +922,7 @@
   }
 
   function findNativeListTrigger(controlWrapper) {
-    const manageButton = controlWrapper.querySelector(".starlists-repo-manage");
+    const manageButton = controlWrapper.querySelector(".github-star-lists-plus-repo-manage");
     const scopes = [
       controlWrapper.parentElement,
       controlWrapper.parentElement?.parentElement,
@@ -1000,7 +1000,7 @@
   }
 
   function closeRepositoryPanel() {
-    document.querySelector(".starlists-repo-panel")?.remove();
+    document.querySelector(".github-star-lists-plus-repo-panel")?.remove();
     if (typeof state.repoPanelCleanup === "function") {
       state.repoPanelCleanup();
       state.repoPanelCleanup = null;
@@ -1013,7 +1013,7 @@
     const actions = await discoverRepositoryActions(wrapper);
     if (actions.length === 0) {
       const hint = document.createElement("div");
-      hint.className = "starlists-repo-panel starlists-repo-panel-hint";
+      hint.className = "github-star-lists-plus-repo-panel github-star-lists-plus-repo-panel-hint";
       hint.textContent = "暂时没读到 GitHub 原生 lists 菜单，先点开一次原生 Starred 下拉再试。";
       wrapper.appendChild(hint);
       globalThis.setTimeout(() => hint.remove(), 2400);
@@ -1021,24 +1021,24 @@
     }
 
     const panel = document.createElement("div");
-    panel.className = "starlists-repo-panel";
+    panel.className = "github-star-lists-plus-repo-panel";
     panel.innerHTML = `
-      <div class="starlists-repo-panel-head">
+      <div class="github-star-lists-plus-repo-panel-head">
         <strong>管理 lists</strong>
         <button type="button" data-action="close">关闭</button>
       </div>
-      <input type="search" class="starlists-repo-search" placeholder="搜索 list 名">
-      <div class="starlists-repo-selected"></div>
-      <div class="starlists-repo-options"></div>
-      <div class="starlists-repo-actions">
+      <input type="search" class="github-star-lists-plus-repo-search" placeholder="搜索 list 名">
+      <div class="github-star-lists-plus-repo-selected"></div>
+      <div class="github-star-lists-plus-repo-options"></div>
+      <div class="github-star-lists-plus-repo-actions">
         <button type="button" data-action="save">保存</button>
       </div>
     `;
     wrapper.appendChild(panel);
 
-    const optionsHost = panel.querySelector(".starlists-repo-options");
-    const selectedHost = panel.querySelector(".starlists-repo-selected");
-    const searchInput = panel.querySelector(".starlists-repo-search");
+    const optionsHost = panel.querySelector(".github-star-lists-plus-repo-options");
+    const selectedHost = panel.querySelector(".github-star-lists-plus-repo-selected");
+    const searchInput = panel.querySelector(".github-star-lists-plus-repo-search");
     const saveButton = panel.querySelector("button[data-action='save']");
 
     function renderOptions() {
@@ -1046,7 +1046,7 @@
       const visibleActions = actions.filter((action) => action.name.toLowerCase().includes(query));
       optionsHost.innerHTML = visibleActions
         .map((action) => `
-          <label class="starlists-repo-option ${action.checked ? "is-checked" : ""}">
+          <label class="github-star-lists-plus-repo-option ${action.checked ? "is-checked" : ""}">
             <input data-list-id="${escapeHtml(action.id)}" type="checkbox" ${action.checked ? "checked" : ""}>
             <span>${escapeHtml(action.name)}</span>
           </label>
@@ -1055,8 +1055,8 @@
 
       selectedHost.innerHTML = actions
         .filter((action) => action.checked)
-        .map((action) => `<span class="starlists-badge">${escapeHtml(action.name)}</span>`)
-        .join("") || `<span class="starlists-badge is-empty">未选择任何 list</span>`;
+        .map((action) => `<span class="github-star-lists-plus-badge">${escapeHtml(action.name)}</span>`)
+        .join("") || `<span class="github-star-lists-plus-badge is-empty">未选择任何 list</span>`;
 
       for (const option of optionsHost.querySelectorAll("input[type='checkbox']")) {
         option.addEventListener("change", () => {
@@ -1091,7 +1091,7 @@
         renderRepositoryChips(wrapper, repoEntry);
         closeRepositoryPanel();
       } catch (error) {
-        console.error("StarLists++ save repository lists failed", error);
+        console.error("GithubStarListsPlus save repository lists failed", error);
         saveButton.disabled = false;
         saveButton.textContent = "重试保存";
       }
@@ -1122,12 +1122,12 @@
       return;
     }
 
-    let wrapper = document.querySelector(".starlists-repo-control");
+    let wrapper = document.querySelector(".github-star-lists-plus-repo-control");
     if (!wrapper) {
       wrapper = document.createElement("div");
-      wrapper.className = "starlists-repo-control";
+      wrapper.className = "github-star-lists-plus-repo-control";
       wrapper.innerHTML = `
-        <button type="button" class="starlists-repo-manage">Lists</button>
+        <button type="button" class="github-star-lists-plus-repo-manage">Lists</button>
       `;
       control.container.insertAdjacentElement("afterend", wrapper);
     }
@@ -1136,16 +1136,16 @@
     const cacheEntries = await storage.getRepoCacheEntries([repoKey]);
     renderRepositoryChips(wrapper, cacheEntries[repoKey] || {});
 
-    const manageButton = wrapper.querySelector(".starlists-repo-manage");
+    const manageButton = wrapper.querySelector(".github-star-lists-plus-repo-manage");
     manageButton.disabled = !isRepositoryStarred(control);
     manageButton.addEventListener("click", () => {
       openRepositoryPanel(wrapper, repoKey).catch((error) => {
-        console.error("StarLists++ open repository panel failed", error);
+        console.error("GithubStarListsPlus open repository panel failed", error);
       });
     });
 
-    if (!control.form.dataset.starlistsBound) {
-      control.form.dataset.starlistsBound = "true";
+    if (!control.form.dataset.githubStarListsPlusBound) {
+      control.form.dataset.githubStarListsPlusBound = "true";
       control.form.addEventListener("submit", () => {
         const shouldAutoOpen = state.settings?.autoOpenAfterStar && !isRepositoryStarred(control);
         if (!shouldAutoOpen) {
@@ -1157,14 +1157,14 @@
           if (!nextControl) {
             return;
           }
-          const nextManageButton = document.querySelector(".starlists-repo-manage");
+          const nextManageButton = document.querySelector(".github-star-lists-plus-repo-manage");
           if (nextManageButton) {
             nextManageButton.disabled = false;
           }
           try {
             await openRepositoryPanel(wrapper, repoKey);
           } catch (error) {
-            console.error("StarLists++ auto-open failed", error);
+            console.error("GithubStarListsPlus auto-open failed", error);
           }
         }, 1400);
       });
@@ -1172,12 +1172,12 @@
 
     state.pageCleanup = () => {
       closeRepositoryPanel();
-      document.querySelector(".starlists-repo-control")?.remove();
+      document.querySelector(".github-star-lists-plus-repo-control")?.remove();
     };
   }
 
   watchRouteChanges();
   refreshRoute().catch((error) => {
-    console.error("StarLists++ bootstrap failed", error);
+    console.error("GithubStarListsPlus bootstrap failed", error);
   });
 })();

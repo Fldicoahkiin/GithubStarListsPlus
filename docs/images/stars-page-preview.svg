@@ -1,0 +1,55 @@
+<svg width="1280" height="780" viewBox="0 0 1280 780" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="780" rx="28" fill="#07111F"/>
+  <rect x="36" y="28" width="1208" height="724" rx="22" fill="#0B1628" stroke="#17304B"/>
+  <rect x="72" y="72" width="1136" height="84" rx="18" fill="#0E1D34" stroke="#1D3656"/>
+  <rect x="96" y="96" width="188" height="36" rx="10" fill="#132440"/>
+  <text x="114" y="120" fill="#E6EDF3" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">GithubStarListsPlus</text>
+  <rect x="320" y="92" width="178" height="44" rx="12" fill="#10304A" stroke="#285C7D"/>
+  <text x="346" y="120" fill="#9CD4FF" font-size="20" font-family="Arial, Helvetica, sans-serif">View: Ungrouped</text>
+  <rect x="516" y="92" width="328" height="44" rx="12" fill="#091725" stroke="#285C7D"/>
+  <text x="542" y="120" fill="#7F9DBB" font-size="20" font-family="Arial, Helvetica, sans-serif">Search repos, notes, lists</text>
+  <rect x="866" y="92" width="186" height="44" rx="12" fill="#10304A" stroke="#285C7D"/>
+  <text x="892" y="120" fill="#9CD4FF" font-size="20" font-family="Arial, Helvetica, sans-serif">Sort: Newest</text>
+  <rect x="1072" y="92" width="112" height="44" rx="12" fill="#153B2B" stroke="#2E8B57"/>
+  <text x="1099" y="120" fill="#BBF7D0" font-size="20" font-family="Arial, Helvetica, sans-serif">3 selected</text>
+
+  <g>
+    <rect x="86" y="192" width="1108" height="132" rx="20" fill="#0F1E34" stroke="#224062"/>
+    <circle cx="126" cy="236" r="10" fill="#38BDF8"/>
+    <text x="154" y="228" fill="#E6EDF3" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">openai/openai-cookbook</text>
+    <text x="154" y="264" fill="#8FA9C4" font-size="20" font-family="Arial, Helvetica, sans-serif">Examples and guides for using the OpenAI API on real projects.</text>
+    <rect x="154" y="284" width="190" height="28" rx="14" fill="#143654"/>
+    <text x="174" y="303" fill="#BDE7FF" font-size="16" font-family="Arial, Helvetica, sans-serif">Starred on 2026-03-11</text>
+    <rect x="362" y="284" width="110" height="28" rx="14" fill="#1B4332"/>
+    <text x="388" y="303" fill="#C7F9CC" font-size="16" font-family="Arial, Helvetica, sans-serif">reading</text>
+    <rect x="488" y="284" width="102" height="28" rx="14" fill="#4C1D95"/>
+    <text x="513" y="303" fill="#E9D5FF" font-size="16" font-family="Arial, Helvetica, sans-serif">ai-tools</text>
+  </g>
+
+  <g>
+    <rect x="86" y="346" width="1108" height="132" rx="20" fill="#0F1E34" stroke="#224062"/>
+    <circle cx="126" cy="390" r="10" fill="#38BDF8"/>
+    <text x="154" y="382" fill="#E6EDF3" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">sindresorhus/awesome</text>
+    <text x="154" y="418" fill="#8FA9C4" font-size="20" font-family="Arial, Helvetica, sans-serif">A curated list of awesome lists across software, design, and productivity.</text>
+    <rect x="154" y="438" width="190" height="28" rx="14" fill="#143654"/>
+    <text x="174" y="457" fill="#BDE7FF" font-size="16" font-family="Arial, Helvetica, sans-serif">Starred on 2026-03-10</text>
+    <rect x="362" y="438" width="98" height="28" rx="14" fill="#3B2F0B"/>
+    <text x="388" y="457" fill="#FDE68A" font-size="16" font-family="Arial, Helvetica, sans-serif">ungrouped</text>
+  </g>
+
+  <g>
+    <rect x="86" y="500" width="1108" height="132" rx="20" fill="#0F1E34" stroke="#224062"/>
+    <circle cx="126" cy="544" r="10" fill="#38BDF8"/>
+    <text x="154" y="536" fill="#E6EDF3" font-size="28" font-family="Arial, Helvetica, sans-serif" font-weight="700">cli/cli</text>
+    <text x="154" y="572" fill="#8FA9C4" font-size="20" font-family="Arial, Helvetica, sans-serif">GitHub CLI for pull requests, issues, automation, and repository workflows.</text>
+    <rect x="154" y="592" width="190" height="28" rx="14" fill="#143654"/>
+    <text x="174" y="611" fill="#BDE7FF" font-size="16" font-family="Arial, Helvetica, sans-serif">Starred on 2026-03-07</text>
+    <rect x="362" y="592" width="110" height="28" rx="14" fill="#0F766E"/>
+    <text x="388" y="611" fill="#CCFBF1" font-size="16" font-family="Arial, Helvetica, sans-serif">workflow</text>
+    <rect x="488" y="592" width="92" height="28" rx="14" fill="#4C1D95"/>
+    <text x="515" y="611" fill="#E9D5FF" font-size="16" font-family="Arial, Helvetica, sans-serif">devops</text>
+  </g>
+
+  <rect x="874" y="652" width="320" height="54" rx="18" fill="#08121F" stroke="#214160"/>
+  <text x="898" y="686" fill="#E6EDF3" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">All view can hide grouped repos</text>
+</svg>

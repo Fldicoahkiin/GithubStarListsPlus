@@ -12,14 +12,14 @@
   });
 
   const STORAGE_KEYS = Object.freeze({
-    settings: "starListsSettings",
-    repoCache: "starListsRepoCache",
-    listCatalog: "starListsListCatalog"
+    settings: "githubStarListsPlusSettings",
+    repoCache: "githubStarListsPlusRepoCache",
+    listCatalog: "githubStarListsPlusListCatalog"
   });
 
   const MESSAGE_TYPES = Object.freeze({
-    getStarMetadata: "star-lists:get-star-metadata",
-    bulkUnstar: "star-lists:bulk-unstar"
+    getStarMetadata: "github-star-lists-plus:get-star-metadata",
+    bulkUnstar: "github-star-lists-plus:bulk-unstar"
   });
 
   function callChrome(target, method, args = []) {
@@ -166,7 +166,7 @@
     return meta?.content?.trim() || "";
   }
 
-  globalThis.StarListsCore = {
+  globalThis.GithubStarListsPlusCore = {
     runtimeApi,
     DEFAULT_SETTINGS,
     STORAGE_KEYS,

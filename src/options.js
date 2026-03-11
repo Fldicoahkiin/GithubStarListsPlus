@@ -1,5 +1,5 @@
 (async () => {
-  const storage = globalThis.StarListsStorage;
+  const storage = globalThis.GithubStarListsPlusStorage;
   const elements = {
     showStarDate: document.getElementById("showStarDate"),
     hideGroupedInAll: document.getElementById("hideGroupedInAll"),
