@@ -109,7 +109,7 @@ def build_userscript(user_script_path: Path) -> None:
 def write_install_notes() -> None:
     notes = "\n".join(
         [
-            "GithubStarListsPlus CI artifacts",
+            "GitHub StarLists++ CI artifacts",
             "",
             "- chrome-unpacked/: load this folder from chrome://extensions -> Load unpacked",
             "- github-star-lists-plus-chrome-unpacked.zip: packaged copy of the unpacked Chrome folder",

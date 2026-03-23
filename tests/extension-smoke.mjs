@@ -108,7 +108,7 @@ function testManifest() {
 
   assert.equal(manifest.manifest_version, 3);
   assert.equal(manifest.background.service_worker, "src/background.js");
-  assert.deepEqual(manifest.background.scripts, ["src/background.js"]);
+  assert.equal(Object.hasOwn(manifest.background, "scripts"), false);
   assert.equal(manifest.browser_specific_settings.gecko.id, "githubstarlistsplus@fldicoahkiin.local");
   assert.deepEqual(
     manifest.browser_specific_settings.gecko.data_collection_permissions.required,
