@@ -1,4 +1,4 @@
-# GithubStarListsPlus
+# GitHub StarLists++
 
 [![CI](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml/badge.svg)](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml)
 [![Chrome-compatible](https://img.shields.io/badge/browser-Chrome%20%2F%20Edge%20%2F%20Brave-2563EB)](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world)
@@ -6,25 +6,15 @@
 [![Userscript](https://img.shields.io/badge/userscript-Tampermonkey%20%2F%20Violentmonkey-14B8A6)](https://www.tampermonkey.net/)
 [![Chinese Docs](https://img.shields.io/badge/docs-Chinese-10B981)](./README.zh-CN.md)
 
-GithubStarListsPlus turns GitHub starred lists into an actual inbox-and-triage workflow instead of a passive archive.
+GitHub StarLists++ turns GitHub starred lists into an actual inbox-and-triage workflow instead of a passive archive.
 
-The product name and repository slug are both **GithubStarListsPlus**.
+The product name is **GitHub StarLists++**. The repository slug remains **GithubStarListsPlus**.
 
 For Chinese documentation, go to [README.zh-CN.md](./README.zh-CN.md).
 
-## Preview
-
-### Stars page: ungrouped triage view
-
-![GithubStarListsPlus stars page preview](docs/images/stars-page-preview.svg)
-
-### Repository page: quick list assignment next to Star
-
-![GithubStarListsPlus repository panel preview](docs/images/repository-panel-preview.svg)
-
 ## Contents
 
-- [Why GithubStarListsPlus](#why-githubstarlistsplus)
+- [Why GitHub StarLists++](#why-github-starlists)
 - [Highlights](#highlights)
 - [Supported runtimes](#supported-runtimes)
 - [Configuration](#configuration)
@@ -38,11 +28,11 @@ For Chinese documentation, go to [README.zh-CN.md](./README.zh-CN.md).
 - [FAQ](#faq)
 - [Chinese docs](#chinese-docs)
 
-## Why GithubStarListsPlus
+## Why GitHub StarLists++
 
 GitHub already ships starred repositories and official lists, but the default flow still leaves one painful gap: you can star a repository quickly, yet organizing it into a useful list still feels delayed and easy to ignore.
 
-GithubStarListsPlus keeps the native GitHub model and improves the workflow around it:
+GitHub StarLists++ keeps the native GitHub model and improves the workflow around it:
 
 - no parallel database
 - no custom list system outside GitHub
@@ -59,7 +49,7 @@ GithubStarListsPlus keeps the native GitHub model and improves the workflow arou
 - list badges on repo cards
 - local search across repository names, descriptions, and list names
 - local sorting by starred date
-- batch selection with bulk unstar
+- batch selection with bulk add/remove lists and bulk unstar
 
 ### Repository page
 
@@ -104,7 +94,7 @@ The options page currently covers the workflow-critical toggles:
 
 ### Userscript settings flow
 
-Userscripts do not have a separate options page yet. Instead, GithubStarListsPlus exposes GM menu commands for:
+Userscripts do not have a separate options page yet. Instead, GitHub StarLists++ exposes GM menu commands for:
 
 - toggling the main stars-page and repository-page behaviors
 - saving or clearing a GitHub token
@@ -171,13 +161,13 @@ Release publishing is intentionally not wired yet. Once the extension is more st
 
 ## Permissions and privacy
 
-GithubStarListsPlus keeps the data model intentionally small:
+GitHub StarLists++ keeps the data model intentionally small:
 
 - `storage`: save local settings, cached list catalog data, and cached `starred_at` metadata
 - `https://github.com/*`: read the current page DOM and reuse GitHub-native list flows
 - `https://api.github.com/*`: fetch `starred_at` metadata and perform authenticated unstar requests when you ask for them
 
-No external analytics, no remote tracking service, and no separate GithubStarListsPlus backend are involved. If you provide a GitHub token, it is stored locally by the extension or userscript manager and only used for GitHub API requests.
+No external analytics, no remote tracking service, and no separate GitHub StarLists++ backend are involved. If you provide a GitHub token, it is stored locally by the extension or userscript manager and only used for GitHub API requests.
 
 ## Project structure
 
@@ -187,7 +177,6 @@ No external analytics, no remote tracking service, and no separate GithubStarLis
 - `src/content.js` - stars page and repository page enhancements
 - `src/options.*` - extension settings page
 - `src/shared/*` - shared runtime, storage, and service logic across targets
-- `docs/images/*` - README preview assets
 - `tests/extension-smoke.mjs` - runtime compatibility and manifest smoke test
 - `tests/artifact-smoke.mjs` - artifact shape and userscript bundle smoke test
 - `scripts/test-extension.sh` - local smoke test entry
@@ -220,7 +209,7 @@ The generated files are written to `dist/`.
 
 ## Roadmap
 
-- batch add/remove lists from the stars page toolbar
+- improve batch action progress feedback and retry handling
 - harden repository-page list parsing against GitHub DOM changes
 - add a popup or command surface for quick settings and cache controls
 - move install bundles from CI artifacts to tagged releases when the extension is ready

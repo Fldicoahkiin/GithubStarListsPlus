@@ -1,135 +1,147 @@
 :root {
-  color-scheme: light dark;
-  --bg: #0d1321;
-  --surface: rgba(255, 255, 255, 0.88);
-  --surface-dark: rgba(13, 19, 33, 0.88);
-  --text: #111827;
-  --text-dark: #f3f4f6;
-  --muted: #4b5563;
-  --muted-dark: #9ca3af;
-  --accent: #0f766e;
-}
-
-* {
-  box-sizing: border-box;
+  color-scheme: light;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --border: #d0d7de;
+  --text: #24292f;
+  --muted: #656d76;
+  --accent: #1f883d;
 }
 
 body {
+  width: 320px;
   margin: 0;
-  min-height: 100vh;
-  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(16, 185, 129, 0.18), transparent 34%),
-    radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.18), transparent 36%),
-    var(--bg);
-  color: var(--text-dark);
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 }
 
-.options-shell {
-  display: grid;
-  place-items: center;
-  min-height: 100vh;
-  padding: 32px 16px;
+.popup {
+  padding: 12px;
 }
 
-.options-card {
-  width: min(720px, 100%);
-  padding: 28px;
-  border-radius: 24px;
-  background: var(--surface-dark);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+.popup-header {
+  margin-bottom: 10px;
 }
 
-.options-head h1 {
+.popup-header h1 {
   margin: 0;
-  font-size: 30px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
-.options-head p {
-  margin: 10px 0 0;
-  color: var(--muted-dark);
-}
-
-.options-kicker {
-  margin: 0 0 8px;
+.popup-header p {
+  margin: 2px 0 0;
+  color: var(--muted);
   font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #67e8f9;
 }
 
-.options-row {
+.popup-section {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.popup-row,
+.popup-field {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  padding: 18px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 10px;
+  padding: 10px 12px;
 }
 
-.options-row-stack {
-  align-items: stretch;
+.popup-row + .popup-row,
+.popup-row + .popup-field {
+  border-top: 1px solid var(--border);
+}
+
+.popup-field {
   flex-direction: column;
 }
 
-.options-row strong,
-.options-row small {
+.popup-row strong,
+.popup-field strong {
   display: block;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.options-row small {
-  margin-top: 6px;
-  color: var(--muted-dark);
+.popup-row small,
+.popup-field small {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 11px;
 }
 
-.options-row input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
+input[type="checkbox"] {
+  margin: 2px 0 0;
+  accent-color: var(--accent);
 }
 
-.options-row input[type="password"] {
+input[type="password"] {
   width: 100%;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(2, 6, 23, 0.44);
-  color: inherit;
+  box-sizing: border-box;
+  min-height: 30px;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
 }
 
-.options-actions {
+input[type="password"]:focus {
+  outline: none;
+  border-color: #0969da;
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
+}
+
+.popup-actions {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding-top: 22px;
+  gap: 10px;
+  margin-top: 10px;
 }
 
-.options-actions button {
-  border: none;
-  border-radius: 999px;
-  padding: 12px 18px;
-  background: linear-gradient(135deg, #14b8a6, #22c55e);
-  color: #04111d;
-  font-weight: 700;
+.popup-actions button {
+  min-height: 30px;
+  padding: 0 12px;
+  border: 1px solid rgba(31, 35, 40, 0.15);
+  border-radius: 6px;
+  background: #1f883d;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
   cursor: pointer;
 }
 
-#statusText {
-  color: #86efac;
+.popup-actions button:disabled {
+  cursor: default;
+  opacity: 0.7;
 }
 
-@media (max-width: 640px) {
-  .options-card {
-    padding: 22px;
-  }
+#statusText {
+  color: var(--muted);
+  font-size: 12px;
+}
 
-  .options-head h1 {
-    font-size: 24px;
-  }
+.popup-footer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 11px;
+}
 
-  .options-row {
-    align-items: flex-start;
-    flex-direction: column;
-  }
+.popup-footer a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.popup-footer a:hover {
+  color: var(--text);
+  text-decoration: underline;
 }

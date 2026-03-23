@@ -21,7 +21,7 @@
 
   async function save() {
     elements.saveButton.disabled = true;
-    elements.statusText.textContent = "正在保存...";
+    elements.statusText.textContent = "Saving...";
 
     await storage.saveSettings({
       showStarDate: elements.showStarDate.checked,
@@ -31,7 +31,7 @@
       token: elements.token.value.trim()
     });
 
-    elements.statusText.textContent = "已保存";
+    elements.statusText.textContent = "Saved";
     elements.saveButton.disabled = false;
 
     globalThis.setTimeout(() => {
