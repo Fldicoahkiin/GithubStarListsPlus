@@ -22,7 +22,7 @@ PLAYWRIGHT_BROWSER_EXECUTABLE="${PLAYWRIGHT_BROWSER_EXECUTABLE:-${CHROME_EXECUTA
 
 if [[ -z "${PLAYWRIGHT_BROWSER_EXECUTABLE:-}" ]]; then
   echo "Unable to resolve a local Playwright Chromium executable." >&2
-  echo "Install it with: PATH=/opt/homebrew/bin:\$PATH npx playwright install chromium" >&2
+  echo "Install it with: PATH=/opt/homebrew/bin:\$PATH pnpm dlx playwright install chromium" >&2
   exit 1
 fi
 

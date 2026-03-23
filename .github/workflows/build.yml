@@ -24,6 +24,9 @@ jobs:
       with:
         node-version: '20'
 
+    - name: Install pnpm
+      run: npm install -g pnpm
+
     - name: Build Artifacts (Extension & Userscript)
       run: python3 scripts/build_artifacts.py
 
