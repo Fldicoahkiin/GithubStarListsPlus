@@ -1,0 +1,43 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Build Artifacts (Extension & Userscript)
+      run: python3 scripts/build_artifacts.py
+
+    - name: Run Smoke Test
+      run: node tests/extension-smoke.mjs
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: starlists-plus-build
+        path: |
+          dist/github-star-lists-plus-chrome-unpacked.zip
+          dist/github-star-lists-plus-firefox-unsigned.xpi
+          dist/github-star-lists-plus.user.js
+          dist/checksums.txt
+          dist/install-notes.txt
+        retention-days: 14
