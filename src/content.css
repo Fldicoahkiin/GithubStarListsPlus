@@ -1,88 +1,62 @@
-.github-star-lists-plus-toolbar {
-  margin: 16px 0 20px;
-  padding: 16px;
-  border: 1px solid var(--borderColor-default, rgba(27, 31, 36, 0.12));
-  border-radius: 16px;
-  background:
-    linear-gradient(135deg, rgba(20, 184, 166, 0.08), transparent 42%),
-    linear-gradient(315deg, rgba(59, 130, 246, 0.08), transparent 38%),
-    var(--bgColor-muted, rgba(246, 248, 250, 0.92));
-  backdrop-filter: blur(12px);
+.github-star-lists-plus-hidden {
+  display: none !important;
 }
 
-.github-star-lists-plus-toolbar-main {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-}
-
-.github-star-lists-plus-toolbar label {
-  display: grid;
-  gap: 6px;
+.github-star-lists-plus-native-date,
+.github-star-lists-plus-repo-date {
+  display: inline-block;
+  color: var(--fgColor-muted, #656d76);
   font-size: 12px;
-  color: var(--fgColor-muted, #57606a);
+  line-height: 18px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.github-star-lists-plus-toolbar input,
-.github-star-lists-plus-toolbar select,
-.github-star-lists-plus-repo-panel input {
-  width: 100%;
-  min-height: 38px;
-  padding: 8px 12px;
-  border: 1px solid var(--borderColor-default, rgba(27, 31, 36, 0.16));
-  border-radius: 12px;
-  background: var(--bgColor-default, #ffffff);
+.github-star-lists-plus-native-date {
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
-.github-star-lists-plus-toolbar-note {
-  margin-top: 12px;
-  font-size: 12px;
-  color: var(--fgColor-muted, #57606a);
-}
-
-.github-star-lists-plus-card-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
-  align-items: center;
-}
-
-.github-star-lists-plus-date {
+.github-star-lists-plus-card-label-slot {
   display: inline-flex;
   align-items: center;
-  min-height: 24px;
-  padding: 0 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  background: rgba(14, 165, 233, 0.1);
-  color: var(--fgColor-muted, #57606a);
+  margin-left: 8px;
+  vertical-align: middle;
 }
 
-.github-star-lists-plus-date.is-loading,
-.github-star-lists-plus-badge.is-empty {
-  opacity: 0.72;
-}
-
-.github-star-lists-plus-badges,
-.github-star-lists-plus-repo-chips,
-.github-star-lists-plus-repo-selected {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
+.github-star-lists-plus-ungrouped-label,
 .github-star-lists-plus-badge {
   display: inline-flex;
   align-items: center;
-  min-height: 24px;
-  padding: 0 10px;
+  min-height: 20px;
+  padding: 0 7px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
   border-radius: 999px;
+  background: var(--bgColor-muted, #f6f8fa);
+  color: var(--fgColor-muted, #656d76);
   font-size: 12px;
+  line-height: 18px;
   text-decoration: none;
-  color: var(--fgColor-default, #24292f);
-  background: rgba(34, 197, 94, 0.14);
-  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.github-star-lists-plus-view-button {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.github-star-lists-plus-view-button .github-star-lists-plus-view-button-icon[hidden] {
+  display: none !important;
+}
+
+.github-star-lists-plus-view-button.is-active {
+  border-color: var(--button-default-borderColor-active, var(--borderColor-default, #d0d7de));
+  background: var(--button-default-bgColor-active, var(--control-transparent-bgColor-active, var(--bgColor-muted, #f6f8fa)));
+  box-shadow: inset 0 0 0 1px var(--button-default-borderColor-active, var(--borderColor-default, #d0d7de));
+}
+
+.github-star-lists-plus-badge.is-empty {
+  opacity: 0.72;
 }
 
 .github-star-lists-plus-card-select {
@@ -98,24 +72,27 @@
 }
 
 .github-star-lists-plus-card-selected {
-  outline: 2px solid rgba(20, 184, 166, 0.48);
-  outline-offset: 4px;
-  border-radius: 12px;
+  outline: 2px solid var(--borderColor-accent-emphasis, var(--color-accent-emphasis, #0969da));
+  outline-offset: 2px;
+  border-radius: 6px;
 }
 
 .github-star-lists-plus-batch-toolbar {
   position: fixed;
   left: 50%;
-  bottom: 20px;
+  bottom: 16px;
   z-index: 100000;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px;
-  border-radius: 999px;
-  color: #ecfeff;
-  background: rgba(13, 19, 33, 0.92);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 8px;
+  background: var(--overlay-bgColor, var(--bgColor-default, #ffffff));
+  color: var(--fgColor-default, #24292f);
+  box-shadow: 0 8px 24px rgba(31, 35, 40, 0.12);
   transform: translate(-50%, 120%);
   transition: transform 160ms ease;
 }
@@ -124,78 +101,73 @@
   transform: translate(-50%, 0);
 }
 
-.github-star-lists-plus-batch-toolbar button,
-.github-star-lists-plus-repo-control button,
-.github-star-lists-plus-repo-actions button,
-.github-star-lists-plus-repo-panel-head button {
-  border: none;
-  border-radius: 999px;
-  min-height: 34px;
-  padding: 0 14px;
-  cursor: pointer;
-}
-
-.github-star-lists-plus-batch-toolbar button[data-action='unstar'],
-.github-star-lists-plus-repo-actions button,
-.github-star-lists-plus-repo-manage {
-  color: #04111d;
-  background: linear-gradient(135deg, #2dd4bf, #4ade80);
-}
-
-.github-star-lists-plus-batch-toolbar button[data-action='clear'],
-.github-star-lists-plus-repo-panel-head button {
+.github-star-lists-plus-batch-panel {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%);
+  width: min(360px, calc(100vw - 24px));
+  padding: 12px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 8px;
+  background: var(--overlay-bgColor, var(--bgColor-default, #ffffff));
   color: var(--fgColor-default, #24292f);
+  box-shadow: 0 12px 28px rgba(31, 35, 40, 0.14);
+}
+
+.github-star-lists-plus-batch-search {
+  width: 100%;
+  min-height: 32px;
+  margin-top: 10px;
+  padding: 5px 12px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+  background: var(--bgColor-default, #ffffff);
+  color: var(--fgColor-default, #24292f);
+  font-size: 12px;
+}
+
+.github-star-lists-plus-batch-copy {
+  display: grid;
+  gap: 2px;
+}
+
+.github-star-lists-plus-batch-copy small,
+.github-star-lists-plus-batch-empty,
+.github-star-lists-plus-batch-note {
+  font-size: 12px;
+  color: var(--fgColor-muted, #656d76);
+}
+
+.github-star-lists-plus-batch-empty {
+  padding: 10px 12px;
+  border: 1px dashed var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
   background: var(--bgColor-muted, #f6f8fa);
 }
 
-.github-star-lists-plus-hidden {
-  display: none !important;
-}
-
-.github-star-lists-plus-repo-control {
-  display: grid;
-  gap: 10px;
+.github-star-lists-plus-batch-note {
+  min-height: 18px;
   margin-top: 10px;
-  position: relative;
 }
 
-.github-star-lists-plus-repo-manage:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.github-star-lists-plus-repo-panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
-  z-index: 100000;
-  width: min(360px, 80vw);
-  padding: 14px;
-  border-radius: 16px;
-  border: 1px solid var(--borderColor-default, rgba(27, 31, 36, 0.14));
-  background: var(--bgColor-default, #ffffff);
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
-}
-
-.github-star-lists-plus-repo-panel-hint {
-  width: max-content;
-  max-width: min(360px, 80vw);
-  font-size: 12px;
+.github-star-lists-plus-batch-note[data-tone="error"] {
+  color: var(--fgColor-danger, #cf222e);
 }
 
 .github-star-lists-plus-repo-panel-head,
 .github-star-lists-plus-repo-actions {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
-
-.github-star-lists-plus-repo-panel-head {
-  margin-bottom: 10px;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .github-star-lists-plus-repo-selected {
-  min-height: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 24px;
   margin: 10px 0;
 }
 
@@ -210,28 +182,35 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--borderColor-muted, rgba(27, 31, 36, 0.08));
+  padding: 8px 10px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+  background: var(--bgColor-default, #ffffff);
   cursor: pointer;
 }
 
 .github-star-lists-plus-repo-option.is-checked {
-  background: rgba(45, 212, 191, 0.08);
-  border-color: rgba(45, 212, 191, 0.26);
+  background: var(--bgColor-muted, #f6f8fa);
 }
 
-.github-star-lists-plus-repo-actions {
-  margin-top: 12px;
+.github-star-lists-plus-repo-date {
+  display: block;
+  margin-top: 4px;
+  margin-left: 8px;
+  padding-bottom: 4px;
+  text-align: left;
+}
+
+.github-star-lists-plus-repo-date:empty {
+  display: none;
 }
 
 @media (max-width: 768px) {
-  .github-star-lists-plus-toolbar-main {
-    grid-template-columns: 1fr;
+  .github-star-lists-plus-batch-toolbar {
+    width: calc(100vw - 24px);
   }
 
-  .github-star-lists-plus-repo-panel {
-    left: 0;
-    right: auto;
+  .github-star-lists-plus-batch-panel {
+    width: min(360px, calc(100vw - 24px));
   }
 }
