@@ -76,18 +76,45 @@
       return;
     }
 
-    const observer = new MutationObserver(() => {
-      if (!document.head) {
+    let observer = null;
+    let completed = false;
+    const handleReady = () => {
+      if (completed || !document.head) {
         return;
       }
-      observer.disconnect();
-      callback();
-    });
 
-    observer.observe(document.documentElement, {
-      childList: true,
-      subtree: true
-    });
+      completed = true;
+      observer?.disconnect();
+      document.removeEventListener("readystatechange", handleReady);
+      callback();
+    };
+
+    document.addEventListener("readystatechange", handleReady);
+
+    const attachObserver = () => {
+      if (completed) {
+        return;
+      }
+
+      if (document.head) {
+        handleReady();
+        return;
+      }
+
+      if (!document.documentElement) {
+        globalObject.setTimeout(attachObserver, 0);
+        return;
+      }
+
+      observer = new MutationObserver(handleReady);
+      observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+      });
+      handleReady();
+    };
+
+    attachObserver();
   }
 
   function installStyle(cssText) {
@@ -157,7 +184,7 @@
   async function sendMessage(message) {
     const service = globalObject.GithubStarListsPlusService;
     if (!service?.handleMessage) {
-      throw new Error("GithubStarListsPlus userscript service is unavailable");
+      throw new Error("GitHub StarLists++ userscript service is unavailable");
     }
 
     return service.handleMessage(message);
@@ -191,7 +218,7 @@
     registerMenuCommand,
     installStyle,
     notify(message) {
-      console.info(`[GithubStarListsPlus] ${message}`);
+      console.info(`[GitHub StarLists++] ${message}`);
     }
   };
 

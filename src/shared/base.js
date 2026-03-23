@@ -25,7 +25,7 @@
   function callChrome(target, method, args = []) {
     const fn = target?.[method];
     if (typeof fn !== "function") {
-      return Promise.reject(new Error(`扩展 API 不存在: ${method}`));
+      return Promise.reject(new Error(`Extension API not available: ${method}`));
     }
 
     if (globalThis.browser) {
@@ -114,6 +114,16 @@
       }
 
       const parts = url.pathname.split("/").filter(Boolean);
+
+      // /stars/USERNAME/lists/LIST-NAME
+      if (parts.length >= 4 && parts[0] === "stars" && parts[2] === "lists") {
+        return {
+          id: parts.slice(3).join("/"),
+          url: url.toString()
+        };
+      }
+
+      // /stars/lists/LIST-NAME (legacy format without username)
       if (parts.length >= 3 && parts[0] === "stars" && parts[1] === "lists") {
         return {
           id: parts.slice(2).join("/"),
@@ -137,11 +147,12 @@
       return "";
     }
 
-    return new Intl.DateTimeFormat(undefined, {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit"
-    }).format(date);
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    const hh = String(date.getHours()).padStart(2, "0");
+    const mm = String(date.getMinutes()).padStart(2, "0");
+    return `${y}/${m}/${d} ${hh}:${mm}`;
   }
 
   function debounce(fn, wait = 180) {

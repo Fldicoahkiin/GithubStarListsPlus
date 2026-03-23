@@ -31,7 +31,7 @@
     });
 
     if (!response.ok) {
-      const error = new Error(`GitHub API 请求失败: ${response.status}`);
+      const error = new Error(`GitHub API request failed: ${response.status}`);
       error.status = response.status;
       throw error;
     }
@@ -71,7 +71,7 @@
 
     const unresolved = new Set(missing);
     const freshCache = {};
-    const accept = "application/vnd.github.v3.star+json";
+    const accept = "application/vnd.github.star+json";
     const urls = buildCandidatePages(pageHint).map((page) => ({
       authUrl: `https://api.github.com/user/starred?per_page=100&page=${page}&sort=created&direction=desc`,
       publicUrl: username
@@ -105,7 +105,8 @@
       }
 
       for (const entry of payload) {
-        const repo = entry?.repo;
+        const repo = entry?.repo || entry;
+        const starredAt = entry?.starred_at || "";
         if (!repo?.full_name) {
           continue;
         }
@@ -115,10 +116,10 @@
           continue;
         }
 
-        result[repoKey] = entry.starred_at;
+        result[repoKey] = starredAt;
         freshCache[repoKey] = {
           ...(repoCache[repoKey] || {}),
-          starredAt: entry.starred_at,
+          starredAt,
           starCheckedAt: now
         };
         unresolved.delete(repoKey);

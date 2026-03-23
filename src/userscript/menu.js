@@ -44,18 +44,18 @@
       [core.STORAGE_KEYS.repoCache]: {},
       [core.STORAGE_KEYS.listCatalog]: { items: [], updatedAt: 0 }
     }]);
-    await reloadAfterSave("GithubStarListsPlus cache cleared. The page will reload.");
+    await reloadAfterSave("GitHub StarLists++ cache cleared. The page will reload.");
   }
 
   async function registerMenu() {
     const settings = await storage.getSettings();
     const commands = [
-      [`GithubStarListsPlus: ${settings.showStarDate ? "Disable" : "Enable"} starred date`, () => toggleSetting("showStarDate", "Starred date")],
-      [`GithubStarListsPlus: ${settings.hideGroupedInAll ? "Disable" : "Enable"} hide grouped repos in All`, () => toggleSetting("hideGroupedInAll", "Hide grouped repos in All")],
-      [`GithubStarListsPlus: ${settings.showListBadges ? "Disable" : "Enable"} list badges`, () => toggleSetting("showListBadges", "List badges")],
-      [`GithubStarListsPlus: ${settings.autoOpenAfterStar ? "Disable" : "Enable"} auto-open list panel`, () => toggleSetting("autoOpenAfterStar", "Auto-open list panel")],
-      ["GithubStarListsPlus: Configure GitHub token", configureToken],
-      ["GithubStarListsPlus: Reset cached metadata", resetCache]
+      [`GitHub StarLists++: ${settings.showStarDate ? "Disable" : "Enable"} starred date`, () => toggleSetting("showStarDate", "Starred date")],
+      [`GitHub StarLists++: ${settings.hideGroupedInAll ? "Disable" : "Enable"} hide grouped repos in All`, () => toggleSetting("hideGroupedInAll", "Hide grouped repos in All")],
+      [`GitHub StarLists++: ${settings.showListBadges ? "Disable" : "Enable"} Ungrouped label`, () => toggleSetting("showListBadges", "Ungrouped label")],
+      [`GitHub StarLists++: ${settings.autoOpenAfterStar ? "Disable" : "Enable"} auto-open list panel`, () => toggleSetting("autoOpenAfterStar", "Auto-open list panel")],
+      ["GitHub StarLists++: Configure GitHub token", configureToken],
+      ["GitHub StarLists++: Reset cached metadata", resetCache]
     ];
 
     for (const [label, handler] of commands) {
@@ -68,6 +68,6 @@
   }
 
   registerMenu().catch((error) => {
-    console.error("GithubStarListsPlus userscript menu init failed", error);
+    console.error("GitHub StarLists++ userscript menu init failed", error);
   });
 })();
