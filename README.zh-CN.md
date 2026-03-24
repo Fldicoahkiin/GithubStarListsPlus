@@ -170,25 +170,38 @@ GitHub StarLists++ 故意把数据面控制得很小：
 - `src/shared/*` - 各运行目标共用的运行时、存储和服务逻辑
 - `tests/extension-smoke.mjs` - 运行时兼容和 manifest smoke test
 - `tests/artifact-smoke.mjs` - 构建产物与 userscript bundle smoke test
-- `scripts/test-extension.sh` - 本地 smoke test 入口
-- `scripts/build_artifacts.py` - 为扩展与 userscript 生成 CI 安装产物
+- `scripts/check-syntax.sh` - 扩展与 userscript 源码语法检查入口
+- `scripts/test-smoke.sh` - 运行时 smoke test 入口
+- `scripts/test-artifacts.sh` - 构建产物校验入口
+- `scripts/test-browser-extension.sh` - 基于已构建产物的 Playwright 浏览器测试入口
+- `scripts/test-extension.sh` - 本地聚合校验入口
+- `scripts/build_artifacts.py` - 为扩展与 userscript 生成安装产物
 
 ## 开发与测试
 
-### 本地 smoke test
+### 本地聚合校验
 
 ```bash
 bash ./scripts/test-extension.sh
 ```
 
-当前覆盖：
+当前聚合校验覆盖：
 
 - 扩展脚本语法检查
 - Chrome callback API 兼容
 - Firefox Promise API 兼容
 - 双浏览器 manifest 关键字段检查
-- 构建产物打包检查
-- userscript 构建检查
+- 构建产物打包
+- 构建产物结果校验
+
+### 分步执行校验
+
+```bash
+bash ./scripts/check-syntax.sh
+bash ./scripts/test-smoke.sh
+python3 ./scripts/build_artifacts.py
+bash ./scripts/test-artifacts.sh
+```
 
 ### 本地生成安装包
 

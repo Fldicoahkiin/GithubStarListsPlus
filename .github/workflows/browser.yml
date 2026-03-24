@@ -1,0 +1,34 @@
+name: Browser
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-test:
+    name: Browser Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Playwright Chromium
+        run: pnpm dlx playwright install chromium
+
+      - name: Build installable bundles
+        run: python3 ./scripts/build_artifacts.py
+
+      - name: Run browser test
+        run: bash ./scripts/test-browser-extension.sh

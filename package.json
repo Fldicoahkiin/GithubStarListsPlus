@@ -2,8 +2,10 @@
   "scripts": {
     "dev": "PATH=/opt/homebrew/bin:$PATH pnpm dlx nodemon -e js,html,css,json -x \"python3 scripts/build_artifacts.py\"",
     "build": "PATH=/opt/homebrew/bin:$PATH python3 scripts/build_artifacts.py",
-    "test:smoke": "PATH=/opt/homebrew/bin:$PATH bash scripts/test-extension.sh",
-    "test:ui": "PATH=/opt/homebrew/bin:$PATH bash scripts/test-github-ui.sh",
+    "check:syntax": "PATH=/opt/homebrew/bin:$PATH bash scripts/check-syntax.sh",
+    "test:smoke": "PATH=/opt/homebrew/bin:$PATH bash scripts/test-smoke.sh",
+    "test:artifacts": "PATH=/opt/homebrew/bin:$PATH bash scripts/test-artifacts.sh",
+    "test:all": "PATH=/opt/homebrew/bin:$PATH bash scripts/test-extension.sh",
     "test:browser": "PATH=/opt/homebrew/bin:$PATH bash scripts/test-browser-extension.sh"
   }
 }

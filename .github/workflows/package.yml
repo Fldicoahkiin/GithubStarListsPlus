@@ -1,4 +1,4 @@
-name: CI
+name: Package
 
 on:
   push:
@@ -9,36 +9,10 @@ permissions:
   contents: read
 
 jobs:
-  smoke-test:
-    name: Smoke Test
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Verify toolchain
-        run: |
-          node --version
-          python3 --version
-
-      - name: Run smoke test
-        run: bash ./scripts/test-extension.sh
-
   package-artifacts:
     name: Package Artifacts
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: smoke-test
 
     steps:
       - name: Checkout repository
@@ -54,6 +28,9 @@ jobs:
 
       - name: Build installable bundles
         run: python3 ./scripts/build_artifacts.py
+
+      - name: Validate packaged artifacts
+        run: bash ./scripts/test-artifacts.sh
 
       - name: Write artifact summary
         run: |

@@ -7,7 +7,11 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 . "$ROOT_DIR/scripts/playwright-runtime.sh"
 
 clear_playwright_npm_env
-python3 "$ROOT_DIR/scripts/build_artifacts.py" >/dev/null
+
+if [[ ! -d "$ROOT_DIR/dist/chrome-unpacked" ]]; then
+  echo "Missing dist/chrome-unpacked. Build artifacts first with: python3 scripts/build_artifacts.py" >&2
+  exit 1
+fi
 
 PLAYWRIGHT_NODE_MODULES="$(resolve_playwright_node_modules)"
 

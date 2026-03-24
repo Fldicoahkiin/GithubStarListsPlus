@@ -179,25 +179,38 @@ No external analytics, no remote tracking service, and no separate GitHub StarLi
 - `src/shared/*` - shared runtime, storage, and service logic across targets
 - `tests/extension-smoke.mjs` - runtime compatibility and manifest smoke test
 - `tests/artifact-smoke.mjs` - artifact shape and userscript bundle smoke test
-- `scripts/test-extension.sh` - local smoke test entry
-- `scripts/build_artifacts.py` - CI packaging script for extension and userscript bundles
+- `scripts/check-syntax.sh` - syntax validation entry for extension and userscript sources
+- `scripts/test-smoke.sh` - runtime smoke test entry
+- `scripts/test-artifacts.sh` - packaged artifact validation entry
+- `scripts/test-browser-extension.sh` - Playwright browser test entry against built artifacts
+- `scripts/test-extension.sh` - aggregate local verification entry
+- `scripts/build_artifacts.py` - packaging script for extension and userscript bundles
 
 ## Development
 
-### Run the local smoke test
+### Run local verification
 
 ```bash
 bash ./scripts/test-extension.sh
 ```
 
-The smoke test covers:
+The aggregate check covers:
 
 - syntax validation for extension scripts
 - Chrome callback API compatibility
 - Firefox Promise API compatibility
 - manifest checks for both browsers
 - artifact packaging generation
-- userscript bundle generation
+- packaged artifact validation
+
+### Run checks separately
+
+```bash
+bash ./scripts/check-syntax.sh
+bash ./scripts/test-smoke.sh
+python3 ./scripts/build_artifacts.py
+bash ./scripts/test-artifacts.sh
+```
 
 ### Build bundles locally
 
