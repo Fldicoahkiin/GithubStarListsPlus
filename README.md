@@ -40,7 +40,7 @@ Choose the form that fits your workflow:
 - **Extension**: better if you want a built-in settings page and a more complete long-term setup
 - **Userscript**: better if you want the fastest way to try it with Tampermonkey or Violentmonkey
 
-Current pre-release builds are distributed through the `Package` workflow artifacts.
+Current pre-release builds are distributed through the `Package` workflow artifacts, split by target instead of one combined bundle.
 
 ### Chrome / Edge / Brave
 
@@ -100,12 +100,15 @@ pnpm run build
 ### Common commands
 
 ```bash
+pnpm run test:all
+pnpm run test:browser
 pnpm run check:syntax
 pnpm run test:smoke
 pnpm run test:artifacts
-pnpm run test:browser
 pnpm run build
 ```
+
+`test:all` is the main local verification entry. It runs syntax checks, smoke test, artifact build, and artifact validation in one pass.
 
 ### Project layout
 
@@ -122,23 +125,18 @@ Build output is written to `dist/`.
 
 ## CI Artifacts
 
-This repository currently uses four GitHub Actions workflows:
+This repository currently uses three GitHub Actions workflows:
 
-- [`Lint`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/lint.yml) - syntax checks
-- [`Smoke`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/smoke.yml) - runtime smoke test
+- [`CI`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml) - aggregate verification for syntax, smoke, build, and artifact checks
 - [`Package`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/package.yml) - build and upload installable artifacts
 - [`Browser`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/browser.yml) - manually triggered Playwright browser test
 
-The `Package` workflow uploads:
+The `Package` workflow uploads four separate artifacts:
 
-- `chrome-unpacked/`
-- `github-star-lists-plus-chrome-unpacked.zip`
-- `firefox-unsigned/`
-- `github-star-lists-plus-firefox-unsigned.xpi`
-- `github-star-lists-plus.user.js`
-- `checksums.txt`
-- `install-notes.txt`
-- `artifact-metadata.json`
+- `github-star-lists-plus-chrome-*` - Chromium unpacked folder and zip
+- `github-star-lists-plus-firefox-*` - Firefox temporary-install folder and unsigned `.xpi`
+- `github-star-lists-plus-userscript-*` - generated `.user.js`
+- `github-star-lists-plus-metadata-*` - checksums, install notes, and artifact metadata
 
 ## FAQ
 

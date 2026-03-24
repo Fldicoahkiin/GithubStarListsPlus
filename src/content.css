@@ -194,11 +194,19 @@
 }
 
 .github-star-lists-plus-repo-date {
-  display: block;
-  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   margin-left: 8px;
-  padding-bottom: 4px;
   text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.github-star-lists-plus-repo-date-star {
+  flex-shrink: 0;
+  color: var(--color-star-fg, #f2cc60);
+  fill: currentColor;
 }
 
 .github-star-lists-plus-repo-date:empty {

@@ -40,10 +40,41 @@ jobs:
             find dist -maxdepth 2 -type f | sort | sed 's#^#- `#; s#$#`#'
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload CI bundles
+      - name: Upload Chrome artifact
         uses: actions/upload-artifact@v4
         with:
-          name: github-star-lists-plus-bundles-${{ github.run_number }}
-          path: dist/
+          name: github-star-lists-plus-chrome-${{ github.run_number }}
+          path: |
+            dist/chrome-unpacked/
+            dist/github-star-lists-plus-chrome-unpacked.zip
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload Firefox artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-star-lists-plus-firefox-${{ github.run_number }}
+          path: |
+            dist/firefox-unsigned/
+            dist/github-star-lists-plus-firefox-unsigned.xpi
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload userscript artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-star-lists-plus-userscript-${{ github.run_number }}
+          path: dist/github-star-lists-plus.user.js
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload metadata artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-star-lists-plus-metadata-${{ github.run_number }}
+          path: |
+            dist/checksums.txt
+            dist/install-notes.txt
+            dist/artifact-metadata.json
           if-no-files-found: error
           retention-days: 14

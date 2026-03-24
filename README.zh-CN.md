@@ -38,7 +38,7 @@ GitHub StarLists++ 做的事情很直接：
 - **Extension**：更适合长期使用，有独立设置页，整体更完整
 - **Userscript**：更适合低门槛快速试用，安装更轻
 
-当前预发布版本通过 `Package` workflow 的 artifacts 分发。
+当前预发布版本通过 `Package` workflow 的 artifacts 分发，并且已经按目标拆开，不再是一个总包。
 
 ### Chrome / Edge / Brave
 
@@ -98,12 +98,15 @@ pnpm run build
 ### 常用命令
 
 ```bash
+pnpm run test:all
+pnpm run test:browser
 pnpm run check:syntax
 pnpm run test:smoke
 pnpm run test:artifacts
-pnpm run test:browser
 pnpm run build
 ```
+
+`test:all` 是主要的本地聚合校验入口，会依次执行语法检查、smoke test、产物构建和产物校验。
 
 ### 目录概览
 
@@ -120,23 +123,18 @@ pnpm run build
 
 ## CI 产物
 
-当前仓库使用 4 个 GitHub Actions workflow：
+当前仓库使用 3 个 GitHub Actions workflow：
 
-- [`Lint`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/lint.yml) - 语法检查
-- [`Smoke`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/smoke.yml) - 运行时 smoke test
+- [`CI`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml) - 聚合执行语法检查、smoke test、构建和产物校验
 - [`Package`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/package.yml) - 构建并上传安装产物
 - [`Browser`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/browser.yml) - 手动触发的 Playwright 浏览器测试
 
-`Package` workflow 会上传：
+`Package` workflow 现在会分开上传 4 类 artifacts：
 
-- `chrome-unpacked/`
-- `github-star-lists-plus-chrome-unpacked.zip`
-- `firefox-unsigned/`
-- `github-star-lists-plus-firefox-unsigned.xpi`
-- `github-star-lists-plus.user.js`
-- `checksums.txt`
-- `install-notes.txt`
-- `artifact-metadata.json`
+- `github-star-lists-plus-chrome-*` - Chromium unpacked 目录和 zip 包
+- `github-star-lists-plus-firefox-*` - Firefox 临时安装目录和 unsigned `.xpi`
+- `github-star-lists-plus-userscript-*` - 生成出的 `.user.js`
+- `github-star-lists-plus-metadata-*` - checksums、安装说明和产物元数据
 
 ## 常见问题
 

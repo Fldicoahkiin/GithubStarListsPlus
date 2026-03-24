@@ -75,9 +75,57 @@ body {
   font-size: 11px;
 }
 
-input[type="checkbox"] {
-  margin: 2px 0 0;
-  accent-color: var(--accent);
+.popup-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+.popup-switch input[type="checkbox"] {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.popup-switch-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  background: #d0d7de;
+  transition: background-color 0.2s ease;
+}
+
+.popup-switch-slider::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(31, 35, 40, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.popup-switch input[type="checkbox"]:checked + .popup-switch-slider {
+  background: var(--accent);
+}
+
+.popup-switch input[type="checkbox"]:checked + .popup-switch-slider::after {
+  transform: translateX(16px);
+}
+
+.popup-switch input[type="checkbox"]:focus-visible + .popup-switch-slider {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
 }
 
 input[type="password"] {

@@ -1,4 +1,4 @@
-name: Lint
+name: CI
 
 on:
   push:
@@ -9,8 +9,8 @@ permissions:
   contents: read
 
 jobs:
-  syntax-check:
-    name: Syntax Check
+  verify:
+    name: Verify
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -26,5 +26,5 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Run syntax checks
-        run: bash ./scripts/check-syntax.sh
+      - name: Run aggregate verification
+        run: bash ./scripts/test-extension.sh
