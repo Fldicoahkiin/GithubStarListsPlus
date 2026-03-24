@@ -1,263 +1,177 @@
 # GitHub StarLists++
 
-[![CI](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml/badge.svg)](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml)
+[![Package](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/package.yml/badge.svg)](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/package.yml)
 [![Chrome-compatible](https://img.shields.io/badge/browser-Chrome%20%2F%20Edge%20%2F%20Brave-2563EB)](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world)
 [![Firefox-compatible](https://img.shields.io/badge/browser-Firefox-F97316)](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Temporary_Installation_in_Firefox)
 [![Userscript](https://img.shields.io/badge/userscript-Tampermonkey%20%2F%20Violentmonkey-14B8A6)](https://www.tampermonkey.net/)
 [![Chinese Docs](https://img.shields.io/badge/docs-Chinese-10B981)](./README.zh-CN.md)
 
-GitHub StarLists++ turns GitHub starred lists into an actual inbox-and-triage workflow instead of a passive archive.
+GitHub StarLists++ is a small browser extension and userscript that makes GitHub stars easier to sort, review, and clean up.
+
+It keeps the native GitHub stars and official lists workflow, but adds the missing pieces that make starred repositories usable as an inbox instead of a pile.
 
 The product name is **GitHub StarLists++**. The repository slug remains **GithubStarListsPlus**.
 
-For Chinese documentation, go to [README.zh-CN.md](./README.zh-CN.md).
+## What It Does
 
-## Contents
+GitHub lets you star repositories quickly, but sorting them into useful lists still feels slow and easy to postpone.
 
-- [Why GitHub StarLists++](#why-github-starlists)
-- [Highlights](#highlights)
-- [Supported runtimes](#supported-runtimes)
-- [Configuration](#configuration)
-- [Compatibility matrix](#compatibility-matrix)
-- [Install](#install)
-- [CI artifacts](#ci-artifacts)
-- [Permissions and privacy](#permissions-and-privacy)
-- [Project structure](#project-structure)
-- [Development](#development)
-- [Roadmap](#roadmap)
-- [FAQ](#faq)
-- [Chinese docs](#chinese-docs)
+GitHub StarLists++ improves that flow without replacing GitHub itself:
 
-## Why GitHub StarLists++
+- keep using GitHub stars and official lists
+- sort repositories into lists faster
+- make ungrouped stars visible and easier to process
+- add small workflow helpers directly where starring already happens
 
-GitHub already ships starred repositories and official lists, but the default flow still leaves one painful gap: you can star a repository quickly, yet organizing it into a useful list still feels delayed and easy to ignore.
+## Features
 
-GitHub StarLists++ keeps the native GitHub model and improves the workflow around it:
-
-- no parallel database
-- no custom list system outside GitHub
-- immediate list assignment after starring
-- an opinionated `Ungrouped` workflow that helps you keep stars clean
-
-## Highlights
-
-### Stars page
-
-- `All`, `Ungrouped`, and discovered list switching
-- optional hiding of grouped repositories inside `All`
-- `Starred on ...` metadata directly on repo cards
-- list badges on repo cards
-- local search across repository names, descriptions, and list names
-- local sorting by starred date
-- batch selection with bulk add/remove lists and bulk unstar
-
-### Repository page
-
-- a `Lists` action next to the native Star area
-- cached list badges near the Star button
-- searchable multi-select list panel
-- optional auto-open after starring a repository
-
-### Philosophy
-
-- stay as close as possible to GitHub-native behavior
-- make ungrouped stars obvious, instead of invisible debt
-- optimize for fast classification right where the star action happens
-
-## Supported runtimes
-
-### Extension targets
-
-- Chrome
-- Edge / Brave via Chrome-compatible extension loading
-- Firefox
-
-### Userscript targets
-
-- Tampermonkey
-- Violentmonkey
-- other GM-compatible managers may work, but are not the primary target yet
-
-The codebase includes a lightweight compatibility layer for callback-style `chrome.*` APIs, Promise-style `browser.*` APIs, and GM-style userscript APIs.
-
-## Configuration
-
-### Extension settings page
-
-The options page currently covers the workflow-critical toggles:
-
-- show starred date on `https://github.com/stars`
-- hide grouped repositories inside `All`
-- show list badges on cards and repository pages
-- auto-open the list panel right after starring
-- optional GitHub token for better API quota and `starred_at` coverage
-
-### Userscript settings flow
-
-Userscripts do not have a separate options page yet. Instead, GitHub StarLists++ exposes GM menu commands for:
-
-- toggling the main stars-page and repository-page behaviors
-- saving or clearing a GitHub token
-- resetting cached metadata and forcing a reload
-
-## Compatibility matrix
-
-| Runtime | Install path | Current status | Notes |
-| --- | --- | --- | --- |
-| Chrome / Edge / Brave | MV3 extension | Supported | Load unpacked from CI artifact during pre-release |
-| Firefox | MV3 extension with `gecko` metadata | Supported | Temporary install today, signing later |
-| Tampermonkey | userscript | Supported | Good low-friction path for DOM-first usage |
-| Violentmonkey | userscript | Supported | Same generated `.user.js` bundle |
-
+- switch between `All`, `Ungrouped`, and discovered lists on the stars page
+- show `Starred on ...` metadata on repository cards
+- show list badges on stars cards and repository pages
+- search and sort locally on the stars page
+- batch add to lists, remove from lists, and unstar
+- add a `Lists` action next to the native Star area on repository pages
+- optionally open the list panel right after starring a repository
 
 ## Install
 
-### Chrome / Edge / Brave
+Choose the form that fits your workflow:
 
-Current pre-release installation path:
+- **Extension**: better if you want a built-in settings page and a more complete long-term setup
+- **Userscript**: better if you want the fastest way to try it with Tampermonkey or Violentmonkey
+
+Current pre-release builds are distributed through the `Package` workflow artifacts.
+
+### Chrome / Edge / Brave
 
 1. Open `chrome://extensions`.
 2. Enable developer mode.
-3. Download the latest CI artifact from [Actions](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml).
+3. Download the latest artifact from the [`Package` workflow](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/package.yml).
 4. Unzip `github-star-lists-plus-chrome-unpacked.zip`.
 5. Click `Load unpacked` and select the extracted folder.
 
 ### Firefox
 
-Current pre-release installation path:
-
 1. Open `about:debugging#/runtime/this-firefox`.
-2. Download the latest CI artifact from [Actions](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml).
+2. Download the latest artifact from the [`Package` workflow](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/package.yml).
 3. Use either the `firefox-unsigned` folder or `github-star-lists-plus-firefox-unsigned.xpi`.
-4. Choose `Load Temporary Add-on` and select `manifest.json` from the folder, or the unsigned `.xpi` file.
+4. Click `Load Temporary Add-on` and select `manifest.json` from the folder, or select the unsigned `.xpi` file.
 
 ### Tampermonkey / Violentmonkey
 
-Current pre-release installation path:
-
 1. Install [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/).
-2. Download the latest CI artifact from [Actions](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml).
-3. Open `github-star-lists-plus.user.js` from the artifact.
+2. Download the latest artifact from the [`Package` workflow](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/package.yml).
+3. Open `github-star-lists-plus.user.js`.
 4. Confirm installation in your userscript manager.
 
-## CI artifacts
+## Settings
 
-GitHub Actions currently generates installation bundles on every push, pull request, and manual run.
+### Extension
 
-Workflow: [`CI`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/ci.yml)
+The extension settings page currently lets you:
 
-Each successful run uploads:
+- show starred date on `https://github.com/stars`
+- hide grouped repositories inside `All`
+- show list badges on cards and repository pages
+- auto-open the list panel right after starring
+- save an optional GitHub token for better API quota and `starred_at` coverage
 
-- `chrome-unpacked/` - unpacked folder for Chromium developer-mode loading
-- `github-star-lists-plus-chrome-unpacked.zip` - zipped copy of the unpacked Chromium bundle
-- `firefox-unsigned/` - unpacked folder for Firefox temporary loading
-- `github-star-lists-plus-firefox-unsigned.xpi` - unsigned Firefox bundle for temporary install or future signing
-- `github-star-lists-plus.user.js` - userscript bundle for Tampermonkey or Violentmonkey
-- `checksums.txt` - SHA-256 digests for the packaged archives
-- `install-notes.txt` - quick installation notes included inside the artifact
-- `artifact-metadata.json` - extension name, version, and archive digests
+### Userscript
 
-Release publishing is intentionally not wired yet. Once the extension is more stable, packaging can move from CI runs to tagged releases.
+The userscript version uses GM menu commands instead of a separate settings page.
 
-## Permissions and privacy
+You can use them to:
 
-GitHub StarLists++ keeps the data model intentionally small:
+- toggle the main stars-page and repository-page features
+- save or remove a GitHub token
+- clear cached data and reload the page
 
-- `storage`: save local settings, cached list catalog data, and cached `starred_at` metadata
-- `https://github.com/*`: read the current page DOM and reuse GitHub-native list flows
-- `https://api.github.com/*`: fetch `starred_at` metadata and perform authenticated unstar requests when you ask for them
-
-No external analytics, no remote tracking service, and no separate GitHub StarLists++ backend are involved. If you provide a GitHub token, it is stored locally by the extension or userscript manager and only used for GitHub API requests.
-
-## Project structure
-
-- `manifest.json` - extension manifest shared across Chrome and Firefox
-- `src/userscript/*` - userscript adapter and GM menu commands
-- `src/background.js` - extension-side GitHub API bridge for Chrome and Firefox
-- `src/content.js` - stars page and repository page enhancements
-- `src/options.*` - extension settings page
-- `src/shared/*` - shared runtime, storage, and service logic across targets
-- `tests/extension-smoke.mjs` - runtime compatibility and manifest smoke test
-- `tests/artifact-smoke.mjs` - artifact shape and userscript bundle smoke test
-- `scripts/check-syntax.sh` - syntax validation entry for extension and userscript sources
-- `scripts/test-smoke.sh` - runtime smoke test entry
-- `scripts/test-artifacts.sh` - packaged artifact validation entry
-- `scripts/test-browser-extension.sh` - Playwright browser test entry against built artifacts
-- `scripts/test-extension.sh` - aggregate local verification entry
-- `scripts/build_artifacts.py` - packaging script for extension and userscript bundles
+The GitHub token is optional. It is only there to improve API quota and metadata coverage.
 
 ## Development
 
-### Run local verification
+### Quick start
 
 ```bash
-bash ./scripts/test-extension.sh
+pnpm run test:all
+pnpm run build
 ```
 
-The aggregate check covers:
-
-- syntax validation for extension scripts
-- Chrome callback API compatibility
-- Firefox Promise API compatibility
-- manifest checks for both browsers
-- artifact packaging generation
-- packaged artifact validation
-
-### Run checks separately
+### Common commands
 
 ```bash
-bash ./scripts/check-syntax.sh
-bash ./scripts/test-smoke.sh
-python3 ./scripts/build_artifacts.py
-bash ./scripts/test-artifacts.sh
+pnpm run check:syntax
+pnpm run test:smoke
+pnpm run test:artifacts
+pnpm run test:browser
+pnpm run build
 ```
 
-### Build bundles locally
+### Project layout
 
-```bash
-python3 ./scripts/build_artifacts.py
-```
+- `manifest.json` - shared extension manifest
+- `src/content.js` - stars page and repository page behavior
+- `src/background.js` - extension-side GitHub API bridge
+- `src/options.*` - extension settings page
+- `src/userscript/*` - userscript adapter and GM menu commands
+- `src/shared/*` - shared runtime, storage, and service logic
+- `tests/*` - smoke and artifact checks
+- `scripts/*` - local test and packaging entry scripts
 
-The generated files are written to `dist/`.
+Build output is written to `dist/`.
 
-## Roadmap
+## CI Artifacts
 
-- improve batch action progress feedback and retry handling
-- harden repository-page list parsing against GitHub DOM changes
-- add a popup or command surface for quick settings and cache controls
-- move install bundles from CI artifacts to tagged releases when the extension is ready
-- keep the userscript target aligned with the extension feature set where practical
+This repository currently uses four GitHub Actions workflows:
+
+- [`Lint`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/lint.yml) - syntax checks
+- [`Smoke`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/smoke.yml) - runtime smoke test
+- [`Package`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/package.yml) - build and upload installable artifacts
+- [`Browser`](https://github.com/Fldicoahkiin/GithubStarListsPlus/actions/workflows/browser.yml) - manually triggered Playwright browser test
+
+The `Package` workflow uploads:
+
+- `chrome-unpacked/`
+- `github-star-lists-plus-chrome-unpacked.zip`
+- `firefox-unsigned/`
+- `github-star-lists-plus-firefox-unsigned.xpi`
+- `github-star-lists-plus.user.js`
+- `checksums.txt`
+- `install-notes.txt`
+- `artifact-metadata.json`
 
 ## FAQ
 
-### Why not create a separate list database?
+### Why not build a separate database for lists?
 
-Because the product goal is to enhance GitHub-native stars and official lists, not replace them.
+Because the goal is to improve GitHub-native stars and official lists, not replace them with a parallel system.
 
-### Can the CI artifacts be installed directly?
+### Should I use the extension or the userscript?
 
-Yes, with different expectations by runtime.
+Use the extension if you want a more complete setup and a built-in settings page. Use the userscript if you want the quickest way to try the workflow changes.
 
-- Chromium browsers still expect unpacked loading during development unless the extension is distributed through the Chrome Web Store or enterprise distribution.
-- Firefox permanent installation requires a signed add-on, but the unsigned `.xpi` works for temporary developer loading.
-- Tampermonkey and Violentmonkey can install the generated `.user.js` directly from the CI artifact.
+### Can I install the CI artifacts directly?
 
-### Why is there a Firefox-specific `gecko.id` in the manifest?
+Yes.
 
-Because Firefox uses `browser_specific_settings.gecko` for browser-specific metadata and extension ID handling.
+- Chromium browsers use unpacked loading during development.
+- Firefox currently uses temporary loading unless the add-on is signed later.
+- Tampermonkey and Violentmonkey can install the generated `.user.js` directly.
 
-### Is release automation included already?
+### Does this send data anywhere else?
 
-Not yet. The current workflow intentionally uploads artifacts on normal CI runs only.
+No external analytics service or separate backend is involved.
 
-### Why support a userscript build as well?
+The extension only uses:
 
-Because userscript managers are a very low-friction way to try DOM enhancements quickly, while browser extensions remain the main long-term distribution target.
+- `storage` for local settings and cached data
+- `https://github.com/*` for DOM-based enhancements
+- `https://api.github.com/*` for GitHub API requests when needed
 
-### Why are both `background.service_worker` and `background.scripts` present?
+If you save a GitHub token, it stays in local extension storage or your userscript manager storage and is only used for GitHub API requests.
 
-Because the project targets Chrome-style MV3 service workers and Firefox's current MV3 background-script behavior at the same time, so the manifest keeps a dual-target background definition for one shared source tree.
+### Why is Firefox still a temporary install?
 
-## Chinese docs
+Because permanent Firefox distribution needs signing. The current artifact is aimed at local testing and pre-release use.
 
-If you prefer reading the project in Chinese, go to [README.zh-CN.md](./README.zh-CN.md).
+For Chinese documentation, go to [README.zh-CN.md](./README.zh-CN.md).
