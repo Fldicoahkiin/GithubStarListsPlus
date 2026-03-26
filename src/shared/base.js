@@ -5,9 +5,11 @@
     showStarDate: true,
     hideGroupedInAll: true,
     showListBadges: true,
+    showThemeSuggestions: true,
     adaptToTheme: true,
     autoOpenAfterStar: true,
     enableBatchSelection: true,
+    themeSuggestionVersion: 1,
     token: ""
   });
 

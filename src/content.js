@@ -7,6 +7,59 @@
   });
   const CUSTOM_STARS_SORT_MODES = new Set(["star-desc", "star-asc"]);
 
+  const THEME_SUGGESTION_VERSION = 1;
+  const THEME_RULES = Object.freeze([
+    {
+      id: "claude-mcp",
+      name: "Claude / MCP",
+      keywords: ["claude", "anthropic", "mcp", "model context protocol", "claude-code", "agent skill", "codex"],
+      excludes: ["paper"]
+    },
+    {
+      id: "ai-tools",
+      name: "AI Tools",
+      keywords: ["llm", "ai", "openai", "gemini", "rag", "agent", "prompt", "copilot", "embedding", "inference"],
+      excludes: ["daily", "game"]
+    },
+    {
+      id: "browser-extension",
+      name: "Browser Extension",
+      keywords: ["extension", "userscript", "tampermonkey", "violentmonkey", "chrome extension", "firefox addon", "browser addon"],
+      excludes: []
+    },
+    {
+      id: "dev-tooling",
+      name: "Dev Tooling",
+      keywords: ["cli", "terminal", "developer", "devtool", "tooling", "workflow", "automation", "sdk", "runtime", "debug"],
+      excludes: []
+    },
+    {
+      id: "security",
+      name: "Security",
+      keywords: ["security", "exploit", "cve", "vulnerability", "poc", "forensics", "audit", "sandbox", "pentest"],
+      excludes: []
+    },
+    {
+      id: "design-ui",
+      name: "Design / UI",
+      keywords: ["design", "ui", "component", "figma", "icon", "theme", "css", "animation", "visual"],
+      excludes: []
+    },
+    {
+      id: "desktop-app",
+      name: "Desktop App",
+      keywords: ["desktop", "electron", "tauri", "cross-platform", "macos", "windows app", "native app"],
+      excludes: []
+    },
+    {
+      id: "knowledge-collection",
+      name: "Knowledge / Collection",
+      keywords: ["awesome", "collection", "resources", "curated", "list of", "roadmap", "guide", "tutorial", "learning"],
+      excludes: []
+    }
+  ]);
+
+
   const state = {
     lastUrl: "",
     routeTimer: 0,
@@ -190,7 +243,7 @@
 
   function extractCardRoot(element) {
     return element?.closest(
-      "li.tmp-py-4.border-bottom, .col-12.d-block.width-full.tmp-py-4.border-bottom, article, .Box-row, li, .col-12, div[class*='border-bottom']"
+      "div.col-12.d-block.width-full.tmp-py-4.border-bottom.color-border-muted, li.tmp-py-4.border-bottom, .col-12.d-block.width-full.tmp-py-4.border-bottom, article, .Box-row, li, .col-12, div[class*='border-bottom']"
     ) || null;
   }
 
@@ -435,27 +488,41 @@
     return currentListIdentity() ? Math.max(1, listCount) : listCount;
   }
 
-  function renderCardListLabel(card, cacheEntry) {
-    const existingHost = card.root.querySelector(".github-star-lists-plus-card-label-slot");
-    const listCount = getCardListCount(cacheEntry);
-    const showUngrouped = Boolean(state.settings?.showListBadges) && listCount === 0;
+  function buildThemeExplanation(themeSuggestion) {
+    const matched = Array.isArray(themeSuggestion?.matchedKeywords) ? themeSuggestion.matchedKeywords.filter(Boolean) : [];
+    return matched.length > 0 ? `Matched: ${matched.join(", ")}` : "";
+  }
 
-    if (!showUngrouped) {
-      existingHost?.remove();
-      return;
+  function renderCardThemeLabel(card, cacheEntry) {
+    const themeSuggestion = cacheEntry?.themeSuggestion;
+    if (!state.settings?.showThemeSuggestions || !themeSuggestion?.id || cacheEntry?.themeFeedback?.dismissed) {
+      return "";
     }
 
-    const host = ensureCardLabelHost(card);
-    if (!host) {
-      return;
-    }
-
-    host.innerHTML = `<span class="github-star-lists-plus-ungrouped-label">Ungrouped</span>`;
+    const explanation = buildThemeExplanation(themeSuggestion);
+    const title = explanation ? ` title="${escapeHtml(explanation)}"` : "";
+    return `<span class="github-star-lists-plus-badge github-star-lists-plus-theme-badge" data-theme-id="${escapeHtml(themeSuggestion.id)}"${title}>Theme: ${escapeHtml(themeSuggestion.name)}</span>`;
   }
 
   function renderCardMeta(card, cacheEntry) {
     renderCardStarDate(card, cacheEntry);
-    renderCardListLabel(card, cacheEntry);
+
+    const host = card.root.querySelector(".github-star-lists-plus-card-label-slot");
+    const listCount = getCardListCount(cacheEntry);
+    const showUngrouped = Boolean(state.settings?.showListBadges) && listCount === 0;
+    const themeMarkup = renderCardThemeLabel(card, cacheEntry);
+
+    if (!showUngrouped && !themeMarkup) {
+      host?.remove();
+      return;
+    }
+
+    const nextHost = ensureCardLabelHost(card);
+    if (!nextHost) {
+      return;
+    }
+
+    nextHost.innerHTML = `${showUngrouped ? '<span class="github-star-lists-plus-ungrouped-label">Ungrouped</span>' : ''}${themeMarkup}`;
   }
 
   function ensureSelectionControl(card, index) {
@@ -860,6 +927,91 @@
     return `${card.owner} ${card.repo} ${card.description} ${listNames}`.toLowerCase();
   }
 
+  function collectMatchedKeywords(text, rule) {
+    const matched = [];
+    for (const keyword of rule.keywords) {
+      if (text.includes(keyword) && !matched.includes(keyword)) {
+        matched.push(keyword);
+      }
+      if (matched.length >= 3) {
+        break;
+      }
+    }
+    return matched;
+  }
+
+  function classifyThemeSuggestion(card, cacheEntry) {
+    const text = extractSearchableText(card, cacheEntry);
+    if (!text) {
+      return null;
+    }
+
+    let bestMatch = null;
+    for (const rule of THEME_RULES) {
+      if (rule.excludes.some((keyword) => text.includes(keyword))) {
+        continue;
+      }
+
+      const matchedKeywords = collectMatchedKeywords(text, rule);
+      const score = matchedKeywords.length;
+      if (score < 2) {
+        continue;
+      }
+
+      if (!bestMatch || score > bestMatch.score) {
+        bestMatch = {
+          id: rule.id,
+          name: rule.name,
+          score,
+          matchedKeywords
+        };
+      }
+    }
+
+    if (!bestMatch) {
+      return null;
+    }
+
+    return {
+      ...bestMatch,
+      version: THEME_SUGGESTION_VERSION,
+      updatedAt: Date.now()
+    };
+  }
+
+  async function hydrateThemeSuggestions(cards) {
+    if (!Array.isArray(cards) || cards.length === 0) {
+      return state.repoCache || {};
+    }
+
+    const patch = {};
+    const version = Number(state.settings?.themeSuggestionVersion || THEME_SUGGESTION_VERSION);
+
+    for (const card of cards) {
+      const cacheEntry = state.repoCache?.[card.key] || {};
+      const existing = cacheEntry.themeSuggestion;
+      if (existing?.version === version) {
+        continue;
+      }
+
+      patch[card.key] = {
+        ...cacheEntry,
+        themeSuggestion: classifyThemeSuggestion(card, cacheEntry)
+      };
+    }
+
+    if (Object.keys(patch).length === 0) {
+      return state.repoCache || {};
+    }
+
+    await storage.mergeRepoCache(patch);
+    state.repoCache = {
+      ...(state.repoCache || {}),
+      ...patch
+    };
+    return state.repoCache;
+  }
+
   function readCardStarTimestamp(card) {
     const timestamp = new Date(state.repoCache?.[card.key]?.starredAt || card.domStarredAt || 0).getTime();
     return Number.isFinite(timestamp) ? timestamp : 0;
@@ -916,13 +1068,20 @@
     for (const card of cards) {
       const cacheEntry = state.repoCache?.[card.key] || {};
       const listCount = getCardListCount(cacheEntry);
+      const themeId = cacheEntry?.themeSuggestion?.id || "";
       let visible = true;
 
       if (filterMode === "ungrouped") {
         visible = listCount === 0;
+      } else if (filterMode === "theme:unknown") {
+        visible = !themeId;
+      } else if (filterMode.startsWith("theme:")) {
+        visible = themeId === filterMode.slice("theme:".length);
       }
 
       card.root.classList.toggle("github-star-lists-plus-hidden", !visible);
+      card.root.hidden = !visible;
+      card.root.setAttribute("aria-hidden", String(!visible));
     }
 
     sortCardsInDom();
@@ -987,15 +1146,33 @@
     return "all";
   }
 
+  function normalizeStarsFilterValue(filterValue) {
+    const nextValue = String(filterValue || "").trim();
+    if (!nextValue || nextValue === getDefaultStarsFilter()) {
+      return getDefaultStarsFilter();
+    }
+    if (nextValue === "ungrouped" || nextValue === "theme:unknown") {
+      return nextValue;
+    }
+    if (nextValue.startsWith("theme:")) {
+      const themeId = nextValue.slice("theme:".length);
+      return THEME_RULES.some((rule) => rule.id === themeId)
+        ? nextValue
+        : getDefaultStarsFilter();
+    }
+    return getDefaultStarsFilter();
+  }
+
   function readStarsViewFromUrl() {
     const url = new URL(location.href);
     const sortValue = url.searchParams.get(STARS_VIEW_QUERY_KEYS.sort) || "";
-    const filterValue = url.searchParams.get(STARS_VIEW_QUERY_KEYS.filter) || "";
+    const rawFilterValue = url.searchParams.get(STARS_VIEW_QUERY_KEYS.filter) || "";
+    const filterValue = normalizeStarsFilterValue(rawFilterValue);
 
     return {
       sort: CUSTOM_STARS_SORT_MODES.has(sortValue) ? sortValue : "default",
-      filter: filterValue === "ungrouped" ? "ungrouped" : "all",
-      hasCustomFilter: url.searchParams.has(STARS_VIEW_QUERY_KEYS.filter)
+      filter: filterValue,
+      hasCustomFilter: filterValue !== getDefaultStarsFilter()
     };
   }
 
@@ -1123,38 +1300,27 @@
     };
   }
 
-  function createStarsViewButton(kind) {
-    const sortTrigger = findStarsMenuTrigger("sort");
-    const button = document.createElement("button");
-    button.type = "button";
-    button.dataset.githubStarListsPlusViewKind = kind;
-    button.classList.add("github-star-lists-plus-view-button");
 
-    if (sortTrigger?.matches("button")) {
-      button.className = `${sortTrigger.className} ml-2 mb-1 mb-lg-0 github-star-lists-plus-view-button`;
-      button.innerHTML = `
-        <span class="Button-content">
-          <span class="Button-visual Button-visual--leading github-star-lists-plus-view-button-icon" hidden aria-hidden="true">
-            <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true" class="octicon octicon-check">
-              <path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>
-            </svg>
-          </span>
-          <span class="Button-label"></span>
-        </span>
-      `;
-    } else {
-      button.className = "btn ml-2 mb-1 mb-lg-0 github-star-lists-plus-view-button";
-    }
-
-    return button;
-  }
 
   function syncStarsFilterButton(button) {
-    const filterActive = !currentListIdentity() && state.view.filter === "ungrouped";
+    const filterValue = normalizeStarsFilterValue(currentListIdentity() ? "all" : state.view.filter);
+    const filterActive = filterValue !== "all";
     button.classList.toggle("is-active", filterActive);
     button.setAttribute("aria-pressed", String(filterActive));
     button.dataset.checked = filterActive ? "true" : "false";
-    button.title = filterActive ? "Show all starred repositories" : "Show only ungrouped repositories";
+
+    let nextLabel = "Filter: All";
+    if (filterValue === "ungrouped") {
+      nextLabel = "Filter: Ungrouped";
+    } else if (filterValue === "theme:unknown") {
+      nextLabel = "Filter: Unclassified";
+    } else if (filterValue.startsWith("theme:")) {
+      const themeId = filterValue.slice("theme:".length);
+      const theme = THEME_RULES.find((item) => item.id === themeId);
+      nextLabel = theme ? `Filter: ${theme.name}` : "Filter: All";
+    }
+
+    button.title = nextLabel;
     const icon = button.querySelector(".github-star-lists-plus-view-button-icon");
     if (icon) {
       icon.hidden = !filterActive;
@@ -1162,11 +1328,11 @@
 
     const label = button.querySelector(".Button-label");
     if (label) {
-      label.textContent = "Ungrouped";
+      label.textContent = nextLabel;
       return;
     }
 
-    button.textContent = "Ungrouped";
+    button.textContent = nextLabel;
   }
 
   function ensureStarsFilterButton() {
@@ -1181,15 +1347,13 @@
 
     let button = mount.container.querySelector("[data-github-star-lists-plus-view-kind='filter']");
     if (!button) {
-      button = createStarsViewButton("filter");
-      button.addEventListener("click", async () => {
-        state.view.filter = state.view.filter === "ungrouped" ? "all" : "ungrouped";
-        await applyStarsViewState();
-      });
-    }
-
-    if (button.parentElement !== mount.container || button.nextElementSibling !== mount.before) {
-      mount.container.insertBefore(button, mount.before);
+      const nativeTrigger = findStarsMenuTrigger("filter");
+      if (!nativeTrigger) {
+        return;
+      }
+      button = nativeTrigger;
+      button.dataset.githubStarListsPlusViewKind = "filter";
+      button.classList.add("github-star-lists-plus-view-button");
     }
 
     syncStarsFilterButton(button);
@@ -1386,6 +1550,12 @@
       return;
     }
 
+    const actionMenu = trigger?.closest("action-menu");
+    if (actionMenu) {
+      trigger.click();
+      return;
+    }
+
     document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
   }
 
@@ -1404,20 +1574,28 @@
     if (interactive.tagName === "A") {
       interactive.setAttribute("href", "#");
     }
-    interactive.addEventListener("click", async (event) => {
+
+    const handleSelect = async (event) => {
       event.preventDefault();
       event.stopPropagation();
       await onSelect();
-    });
+    };
+
+    root.addEventListener("click", handleSelect);
 
     return root;
   }
 
   async function applyStarsViewState() {
-    if (state.view.sort !== "default") {
-      await ensureStarDatesReady();
+    const previousCards = state.cards;
+    state.cards = collectStarCards();
+    if (state.cards.length > 0 && previousCards.length > 0) {
+      const cardsChanged = state.cards.length !== previousCards.length
+        || state.cards.some((card, index) => card.root !== previousCards[index]?.root || card.key !== previousCards[index]?.key);
+      if (cardsChanged) {
+        state.repoCache = await storage.getRepoCacheEntries(state.cards.map((card) => card.key));
+      }
     }
-
     state.view.filterDirty = state.view.filter !== getDefaultStarsFilter();
     syncStarsViewToUrl();
     syncPaginationLinks();
@@ -1426,6 +1604,12 @@
     if (filterButton) {
       syncStarsFilterButton(filterButton);
     }
+
+    if (state.view.sort !== "default") {
+      await ensureStarDatesReady();
+    }
+
+    injectStarsMenuOptions("filter");
     applyCardFilters();
   }
 
@@ -1466,8 +1650,10 @@
           { key: "star-asc", label: "Star oldest" }
         ]
       : [
-          { key: "all", label: "All groups" },
-          { key: "ungrouped", label: "Ungrouped" }
+          { key: "all", label: "All" },
+          { key: "ungrouped", label: "Ungrouped" },
+          ...THEME_RULES.map((rule) => ({ key: `theme:${rule.id}`, label: `Theme: ${rule.name}` })),
+          { key: "theme:unknown", label: "Theme: Unclassified" }
         ];
 
     for (const definition of definitions) {
@@ -1515,6 +1701,7 @@
 
   function ensureStarsViewMenus() {
     bindStarsMenuTrigger("sort");
+    bindStarsMenuTrigger("filter");
     ensureStarsFilterButton();
     syncStarsSortTriggerLabel();
     syncPaginationLinks();
@@ -2020,7 +2207,9 @@
       const nextCards = collectStarCards();
       const missingViewControls = !currentListIdentity()
         && (!findStarsMenuTrigger("sort") || !document.querySelector("[data-github-star-lists-plus-view-kind='filter']"));
-      if (nextCards.length === 0 || (nextCards.length === state.cards.length && !missingViewControls)) {
+      const cardRootsChanged = nextCards.length === state.cards.length
+        && nextCards.some((card, index) => card.root !== state.cards[index]?.root || card.key !== state.cards[index]?.key);
+      if (nextCards.length === 0 || (nextCards.length === state.cards.length && !missingViewControls && !cardRootsChanged)) {
         return;
       }
 
@@ -2052,8 +2241,9 @@
     state.view.sort = routeView.sort;
     state.view.filter = currentListIdentity()
       ? "all"
-      : (routeView.hasCustomFilter ? routeView.filter : getDefaultStarsFilter());
+      : routeView.filter;
     state.view.filterDirty = routeView.hasCustomFilter;
+    syncStarsViewToUrl();
     const hasBatchTargets = Boolean(state.settings.enableBatchSelection) && state.cards.some((card) => Boolean(card.starForm));
 
     for (const [index, card] of state.cards.entries()) {
@@ -2069,6 +2259,11 @@
     }
 
     state.repoCache = await hydrateRepoLists(state.cards, listCatalog);
+    await hydrateThemeSuggestions(state.cards);
+
+    for (const card of state.cards) {
+      renderCardMeta(card, state.repoCache?.[card.key] || {});
+    }
 
     if (state.settings.showStarDate || state.view.sort !== "default") {
       await ensureStarDatesReady();

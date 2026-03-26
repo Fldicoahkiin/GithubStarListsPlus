@@ -4,6 +4,7 @@
     showStarDate: document.getElementById("showStarDate"),
     hideGroupedInAll: document.getElementById("hideGroupedInAll"),
     showListBadges: document.getElementById("showListBadges"),
+    showThemeSuggestions: document.getElementById("showThemeSuggestions"),
     autoOpenAfterStar: document.getElementById("autoOpenAfterStar"),
     token: document.getElementById("token"),
     saveButton: document.getElementById("saveButton"),
@@ -15,6 +16,7 @@
     elements.showStarDate.checked = Boolean(settings.showStarDate);
     elements.hideGroupedInAll.checked = Boolean(settings.hideGroupedInAll);
     elements.showListBadges.checked = Boolean(settings.showListBadges);
+    elements.showThemeSuggestions.checked = Boolean(settings.showThemeSuggestions);
     elements.autoOpenAfterStar.checked = Boolean(settings.autoOpenAfterStar);
     elements.token.value = settings.token || "";
   }
@@ -27,6 +29,7 @@
       showStarDate: elements.showStarDate.checked,
       hideGroupedInAll: elements.hideGroupedInAll.checked,
       showListBadges: elements.showListBadges.checked,
+      showThemeSuggestions: elements.showThemeSuggestions.checked,
       autoOpenAfterStar: elements.autoOpenAfterStar.checked,
       token: elements.token.value.trim()
     });
